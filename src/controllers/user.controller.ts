@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { userService } from '../services/user.service';
 import { sendSuccess } from '../utils/apiResponse';
 import { AppError } from '../utils/AppError';
-import { getParam } from '../utils/getParam';
 
 export const userController = {
   async getMe(req: Request, res: Response) {
@@ -29,7 +28,7 @@ export const userController = {
   },
 
   async getById(req: Request, res: Response) {
-    const user = await userService.getPublicProfile(getParam(req, "id"));
+    const user = await userService.getPublicProfile(req.params.id as string);
     return sendSuccess(res, { message: 'User fetched', data: user });
   },
 };

@@ -10,7 +10,12 @@ const router = Router();
 
 router.get('/me', requireAuth, asyncHandler(userController.getMe));
 router.patch('/me', requireAuth, validate(updateProfileSchema), asyncHandler(userController.updateMe));
-router.patch('/me/profile-photo', requireAuth, upload.single('photo'), asyncHandler(userController.updateProfilePhoto),);
+router.patch(
+  '/me/profile-photo',
+  requireAuth,
+  upload.single('photo'),
+  asyncHandler(userController.updateProfilePhoto),
+);
 router.delete('/me', requireAuth, asyncHandler(userController.deleteMe));
 router.get('/:id', validate(userIdParamSchema, 'params'), asyncHandler(userController.getById));
 

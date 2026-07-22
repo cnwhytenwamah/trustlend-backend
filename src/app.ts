@@ -39,7 +39,7 @@ export function createApp(): Application {
   );
 
   app.get('/health', (_req, res) => {
-    res.json({ success: true, message: 'Trustlend API is running', timestamp: new Date().toISOString() });
+    res.json({ success: true, message: 'TrustLend API is running', timestamp: new Date().toISOString() });
   });
 
   app.use(`/api/${env.API_VERSION}`, routes);

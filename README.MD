@@ -1,4 +1,4 @@
-# RentIt Backend (name pending) — Equipment Rental Marketplace MVP
+# TrustLend Backend — Equipment Rental Marketplace MVP
 
 Node.js + Express + TypeScript backend for the capstone project. This README is written for the whole backend team, including anyone less familiar with parts of the stack — read it before you start picking up an endpoint.
 

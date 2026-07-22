@@ -152,7 +152,7 @@ export const authService = {
 
   async resendVerification(email: string) {
     const user = await userRepository.findByEmail(email);
-    if (!user) return; 
+    if (!user) return; // don't reveal whether the email exists
     if (user.isEmailVerified) return;
 
     const verifyToken = signPurposeToken({ userId: user.id, purpose: 'verify-email' }, '24h');

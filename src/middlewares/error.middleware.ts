@@ -29,7 +29,7 @@ export function errorMiddleware(
 
   if (!(err instanceof AppError)) {
     // Unexpected error — log the full thing for debugging.
-    console.error('🔥 Unhandled error:', err);
+    console.error('Unhandled error:', err);
   }
 
   res.status(statusCode).json({

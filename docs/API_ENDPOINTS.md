@@ -1,4 +1,4 @@
-# RentIt (name TBD) — MVP API Endpoints
+# TrustLend — MVP API Endpoints
 
 > Source of truth: copied from `Equipment_Rental_Marketplace_MVP_API_Endpoints.docx`.
 > All routes are prefixed with `/api/v1` (see `src/routes/index.ts`).

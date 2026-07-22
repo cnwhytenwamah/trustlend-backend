@@ -34,7 +34,7 @@ export const userService = {
   async updateProfilePhoto(userId: string, fileBuffer: Buffer) {
     const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: 'rentit/profile-photos', resource_type: 'image' },
+        { folder: 'trustlend/profile-photos', resource_type: 'image' },
         (error, result) => {
           if (error || !result) return reject(error);
           resolve(result);

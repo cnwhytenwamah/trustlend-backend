@@ -17,7 +17,7 @@ async function start() {
   const app = createApp();
 
   app.listen(env.PORT, () => {
-    console.log(`Trustlend API listening on http://localhost:${env.PORT}`);
+    console.log(`TrustLend API listening on http://localhost:${env.PORT}`);
     console.log(`Health check: http://localhost:${env.PORT}/health`);
     console.log(`API base:     http://localhost:${env.PORT}/api/${env.API_VERSION}`);
   });
