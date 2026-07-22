@@ -3,12 +3,7 @@ import { asyncHandler } from '../../utils/asyncHandler';
 import { requireAuth } from '../../middlewares/auth.middleware';
 import { validate } from '../../middlewares/validate.middleware';
 import { paymentController } from '../../controllers/payment.controller';
-import {
-  initializePaymentSchema,
-  paymentIdParamSchema,
-  refundPaymentSchema,
-  paginationQuerySchema,
-} from '../../validators/payment.validator';
+import { initializePaymentSchema, paymentIdParamSchema, refundPaymentSchema, paginationQuerySchema,} from '../../validators/payment.validator';
 
 const router = Router();
 
