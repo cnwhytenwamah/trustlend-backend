@@ -1,0 +1,55 @@
+{
+  "name": "rentit-backend",
+  "version": "0.1.0",
+  "description": "Equipment Rental Marketplace MVP - Backend API",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "worker:dev": "ts-node-dev --respawn --transpile-only src/jobs/workers/index.ts",
+    "worker:start": "node dist/jobs/workers/index.js",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:migrate:undo": "sequelize-cli db:migrate:undo",
+    "db:seed": "sequelize-cli db:seed:all",
+    "test": "jest"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bullmq": "^5.80.10",
+    "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.0",
+    "firebase-admin": "^14.2.0",
+    "helmet": "^8.3.0",
+    "ioredis": "^5.11.1",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.11.0",
+    "multer": "^2.2.0",
+    "pg": "^8.22.0",
+    "pg-hstore": "^2.3.4",
+    "resend": "^6.18.0",
+    "sequelize": "^6.37.8",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.10.0",
+    "sequelize-cli": "^6.6.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
