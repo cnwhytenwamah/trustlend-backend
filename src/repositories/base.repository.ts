@@ -60,7 +60,9 @@ export class BaseRepository<T extends Model> {
   }
 
   async delete(id: string): Promise<boolean> {
-    const deletedCount = await this.model.destroy({ where: { id } as WhereOptions<Attributes<T>> });
+    const deletedCount = await this.model.destroy({
+      where: { id } as unknown as WhereOptions<Attributes<T>>,
+    });
     return deletedCount > 0;
   }
 

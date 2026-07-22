@@ -26,11 +26,11 @@ export async function sendEmail({ to, subject, html }: SendEmailInput): Promise<
 
 export const emailTemplates = {
   verifyEmail: (firstName: string, verifyUrl: string) => ({
-    subject: 'Verify your RentIt account',
+    subject: 'Verify your TrustLend account',
     html: `<p>Hi ${firstName},</p><p>Please verify your email by clicking the link below:</p><p><a href="${verifyUrl}">${verifyUrl}</a></p>`,
   }),
   resetPassword: (firstName: string, resetUrl: string) => ({
-    subject: 'Reset your RentIt password',
+    subject: 'Reset your TrustLend password',
     html: `<p>Hi ${firstName},</p><p>Click the link below to reset your password. This link expires in 30 minutes.</p><p><a href="${resetUrl}">${resetUrl}</a></p>`,
   }),
 };

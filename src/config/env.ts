@@ -21,7 +21,7 @@ const envSchema = z.object({
   DB_USER: z.string(),
   DB_PASSWORD: z.string(),
   DB_DIALECT: z.literal('postgres').default('postgres'),
-  DB_SSL: z.coerce.boolean().default(false),
+  DB_SSL: z.string().default("false").transform((value) => value.toLowerCase() === "true"),
 
   // JWT
   JWT_ACCESS_SECRET: z.string().min(10),
@@ -57,7 +57,7 @@ const envSchema = z.object({
 
   // Resend
   RESEND_API_KEY: z.string().optional().default(''),
-  EMAIL_FROM: z.string().optional().default('RentIt <no-reply@rentit.dev>'),
+  EMAIL_FROM: z.string().optional().default('TrustLend <no-reply@trustlend.dev>'),
 
   // Firebase
   FIREBASE_SERVICE_ACCOUNT_PATH: z.string().optional().default('./firebase-service-account.json'),

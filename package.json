@@ -1,5 +1,5 @@
 {
-  "name": "rentit-backend",
+  "name": "trustlend-backend",
   "version": "0.1.0",
   "description": "Equipment Rental Marketplace MVP - Backend API",
   "main": "dist/server.js",
