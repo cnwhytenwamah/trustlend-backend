@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth } from "../../middlewares/auth.middleware";
-import { notImplemented } from "../../controllers/_stub";
+import { earningController } from "../../controllers/earning.controller";
 
 const router = Router();
 
-router.get("/earnings", requireAuth, asyncHandler(notImplemented("earnings.list")));
-router.get("/earnings/summary", requireAuth, asyncHandler(notImplemented("earnings.summary")));
-router.get("/earnings/transactions", requireAuth, asyncHandler(notImplemented("earnings.transactions")));
+router.get("/earnings", requireAuth, asyncHandler(earningController.getEarnings));
+router.get("/earnings/summary", requireAuth, asyncHandler(earningController.getEarningsSummary));
+router.get("/earnings/transactions", requireAuth, asyncHandler(earningController.getEarningTransactions));
 
 export default router;
