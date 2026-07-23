@@ -2,52 +2,52 @@ import { Router } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
 import { upload } from "../../middlewares/upload.middleware";
-import { notImplemented } from "../../controllers/_stub";
+import { equipmentController } from "../../controllers/equipment.controller";
 
 const router = Router();
 
 // --- Equipment CRUD ---
-router.post("/equipment", requireAuth, asyncHandler(notImplemented("equipment.create")));
-router.get("/equipment", asyncHandler(notImplemented("equipment.list"))); // public search/browse
-router.get("/equipment/my", requireAuth, asyncHandler(notImplemented("equipment.myListings")));
-router.get("/equipment/:id", asyncHandler(notImplemented("equipment.getById"))); // public
-router.patch("/equipment/:id", requireAuth, asyncHandler(notImplemented("equipment.update")));
-router.delete("/equipment/:id", requireAuth, asyncHandler(notImplemented("equipment.delete")));
+router.post("/equipment", requireAuth, asyncHandler(equipmentController.createEquipment));
+router.get("/equipment", asyncHandler(equipmentController.getEquipment)); // public search/browse
+router.get("/equipment/my", requireAuth, asyncHandler(equipmentController.getMyEquipment));
+router.get("/equipment/:id", asyncHandler(equipmentController.getEquipmentById)); // public
+router.patch("/equipment/:id", requireAuth, asyncHandler(equipmentController.updateEquipment));
+router.delete("/equipment/:id", requireAuth, asyncHandler(equipmentController.deleteEquipment));
 
 // --- Equipment photos ---
 router.post(
   "/equipment/:id/photos",
   requireAuth,
   upload.array("photos", 10),
-  asyncHandler(notImplemented("equipment.addPhotos")),
+  asyncHandler(equipmentController.addPhotos),
 );
 router.delete(
   "/equipment/:id/photos/:photoId",
   requireAuth,
-  asyncHandler(notImplemented("equipment.deletePhoto")),
+  asyncHandler(equipmentController.deletePhoto),
 );
 router.patch(
   "/equipment/:id/photos/:photoId/primary",
   requireAuth,
-  asyncHandler(notImplemented("equipment.setPrimaryPhoto")),
+  asyncHandler(equipmentController.setPrimaryPhoto),
 );
 
 // --- Availability ---
-router.get("/equipment/:id/availability", asyncHandler(notImplemented("equipment.getAvailability"))); // public
+router.get("/equipment/:id/availability", asyncHandler(equipmentController.getAvailability)); // public
 router.patch(
   "/equipment/:id/availability",
   requireAuth,
-  asyncHandler(notImplemented("equipment.updateAvailability")),
+  asyncHandler(equipmentController.updateAvailability),
 );
 router.post(
   "/equipment/:id/block-dates",
   requireAuth,
-  asyncHandler(notImplemented("equipment.blockDates")),
+  asyncHandler(equipmentController.blockDates),
 );
 router.delete(
   "/equipment/:id/block-dates/:blockId",
   requireAuth,
-  asyncHandler(notImplemented("equipment.unblockDates")),
+  asyncHandler(equipmentController.unblockDates),
 );
 
 // --- Admin moderation ---
@@ -55,25 +55,25 @@ router.get(
   "/admin/equipment",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.adminList")),
+  asyncHandler(equipmentController.getAllEquipment),
 );
 router.patch(
   "/admin/equipment/:id/approve",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.approve")),
+  asyncHandler(equipmentController.approveEquipment),
 );
 router.patch(
   "/admin/equipment/:id/reject",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.reject")),
+  asyncHandler(equipmentController.rejectEquipment),
 );
 router.delete(
   "/admin/equipment/:id",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.adminDelete")),
+  asyncHandler(equipmentController.adminDeleteEquipment),
 );
 
 export default router;
