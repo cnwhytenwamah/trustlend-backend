@@ -1,22 +1,22 @@
 import { Router } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
-import { notImplemented } from "../../controllers/_stub";
+import { transactionController } from "../../controllers/transaction.controllers";
 
 const router = Router();
 
-router.get("/transactions/my", requireAuth, asyncHandler(notImplemented("transactions.mine")));
+router.get("/transactions/my", requireAuth, asyncHandler(transactionController.getMyTransactions));
 router.get(
   "/admin/transactions",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("transactions.adminList")),
+  asyncHandler(transactionController.getAllTransactions),
 );
 router.get(
   "/admin/transactions/:id",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("transactions.adminGetById")),
+  asyncHandler(transactionController.getTransactionById),
 );
 
 export default router;
