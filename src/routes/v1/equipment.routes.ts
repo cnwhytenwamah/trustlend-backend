@@ -2,14 +2,26 @@ import { Router } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
 import { upload } from "../../middlewares/upload.middleware";
+import { equipmentController } from "../../controllers/equipment.controller";
 import { notImplemented } from "../../controllers/_stub";
+import { validate } from "../../middlewares/validate.middleware";
+import { createEquipmentSchema } from "../../validators/equipment.validator";
 
 const router = Router();
 
 // --- Equipment CRUD ---
-router.post("/equipment", requireAuth, asyncHandler(notImplemented("equipment.create")));
-router.get("/equipment", asyncHandler(notImplemented("equipment.list"))); // public search/browse
-router.get("/equipment/my", requireAuth, asyncHandler(notImplemented("equipment.myListings")));
+router.post(
+  "/equipment",
+  requireAuth,
+  validate(createEquipmentSchema),
+  asyncHandler(equipmentController.create)
+);
+router.get("/equipment", asyncHandler(equipmentController.listEquipment));// public search/browse
+router.get(
+  "/equipment/my",
+  requireAuth,
+  asyncHandler(equipmentController.myListings)
+);
 router.get("/equipment/:id", asyncHandler(notImplemented("equipment.getById"))); // public
 router.patch("/equipment/:id", requireAuth, asyncHandler(notImplemented("equipment.update")));
 router.delete("/equipment/:id", requireAuth, asyncHandler(notImplemented("equipment.delete")));
