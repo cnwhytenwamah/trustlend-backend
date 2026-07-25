@@ -49,36 +49,48 @@ export const authService = {
     return { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName };
   },
 
-  async login(input: LoginInput) {
-    const user = await userRepository.findByEmailWithPassword(input.email);
-    if (!user) {
-      throw AppError.unauthorized('Invalid email or password');
-    }
+async login(input: LoginInput) {
+  const user = await userRepository.findByEmailWithPassword(input.email);
 
-    const passwordMatches = await bcrypt.compare(input.password, user.passwordHash);
-    if (!passwordMatches) {
-      throw AppError.unauthorized('Invalid email or password');
-    }
+  if (!user) {
+    throw AppError.unauthorized("Invalid email or password");
+  }
 
-    if (user.status !== 'active') {
-      throw AppError.forbidden('This account is not active. Contact support.');
-    }
+  const passwordMatches = await bcrypt.compare(
+    input.password,
+    user.get("passwordHash") as string
+  );
 
-    const accessToken = signAccessToken({ userId: user.id, role: user.role });
-    const refreshToken = signRefreshToken({ userId: user.id, role: user.role });
+  if (!passwordMatches) {
+    throw AppError.unauthorized("Invalid email or password");
+  }
 
-    return {
-      accessToken,
-      refreshToken,
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-      },
-    };
-  },
+  if (user.get("status") !== "active") {
+    throw AppError.forbidden("This account is not active. Contact support.");
+  }
+
+  const accessToken = signAccessToken({
+    userId: user.get("id") as string,
+    role: user.get("role") as string,
+  });
+
+  const refreshToken = signRefreshToken({
+    userId: user.get("id") as string,
+    role: user.get("role") as string,
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+    user: {
+      id: user.get("id"),
+      email: user.get("email"),
+      firstName: user.get("firstName"),
+      lastName: user.get("lastName"),
+      role: user.get("role"),
+    },
+  };
+},
 
   async refreshToken(refreshToken: string) {
     let payload;
