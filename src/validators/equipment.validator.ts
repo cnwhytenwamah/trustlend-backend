@@ -26,4 +26,8 @@ export const createEquipmentSchema = z.object({
   longitude: z.coerce.number().optional(),
 });
 
+export const updateEquipmentSchema = createEquipmentSchema.partial();
+
 export type CreateEquipmentInput = z.infer<typeof createEquipmentSchema>;
+
+export type UpdateEquipmentInput = z.infer<typeof updateEquipmentSchema>;
