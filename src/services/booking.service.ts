@@ -13,7 +13,7 @@ export const bookingService = {
     if (!equipment) {
       throw AppError.notFound('Equipment not found');
     }
-
+  
     const existingBookings = await bookingRepo.findAll({
       where: {
         equipmentId: data.equipmentId,
