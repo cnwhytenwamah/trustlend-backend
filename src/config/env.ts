@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 dotenv.config();
 
+console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
+
 /**
  * Every environment variable the app needs, validated once at startup.
  * If something is missing/misspelled, the app fails fast with a clear

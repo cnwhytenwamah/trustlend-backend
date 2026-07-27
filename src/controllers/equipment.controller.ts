@@ -1,169 +1,85 @@
-import { Request, Response } from "express";
-import { sendSuccess } from "../utils/apiResponse";
+import { Request, Response} from "express";
 import { equipmentService } from "../services/equipment.service";
+import { sendSuccess } from "../utils/apiResponse";
+import { AppError } from "../utils/AppError";
 
-class EquipmentController {
-  async createEquipment(req: Request, res: Response) {
-    const result = await equipmentService.createEquipment();
+export const equipmentController = {
+  async create(req: Request, res: Response) {
+    if (!req.user) {
+      throw AppError.unauthorized("Authentication required");
+    }
+
+    const equipment = await equipmentService.create(
+      req.user.userId,
+      req.body
+    );
 
     return sendSuccess(res, {
+      statusCode: 201,
       message: "Equipment created successfully",
-      data: result,
+      data: equipment,
     });
-  }
+  },
 
-  async getEquipment(req: Request, res: Response) {
-    const result = await equipmentService.getEquipment();
+  async listEquipment(_req: Request, res: Response) {
+    const equipment = await equipmentService.listEquipment();
 
     return sendSuccess(res, {
       message: "Equipment retrieved successfully",
-      data: result,
+      data: equipment,
     });
+  },
+
+  async myListings(req: Request, res: Response) {
+  if (!req.user) {
+    throw AppError.unauthorized("Authentication required");
   }
 
-  async getMyEquipment(req: Request, res: Response) {
-    const result = await equipmentService.getMyEquipment();
+  console.log("equipmentService:", Object.keys(equipmentService));
 
-    return sendSuccess(res, {
-      message: "My equipment retrieved successfully",
-      data: result,
-    });
-  }
+  const equipment = await equipmentService.listMyEquipment(
+    req.user.userId
+  );
 
-  async getEquipmentById(req: Request, res: Response) {
-    const result = await equipmentService.getEquipmentById(req.params.id as string);
+  return sendSuccess(res, {
+    message: "Your equipment retrieved successfully",
+    data: equipment,
+  });
+},
 
-    return sendSuccess(res, {
-      message: "Equipment retrieved successfully",
-      data: result,
-    });
-  }
+async getAllEquipment(_req: Request, res: Response) {
+  const equipment = await equipmentService.getAllEquipment();
 
-  async updateEquipment(req: Request, res: Response) {
-    const result = await equipmentService.updateEquipment(req.params.id as string);
+  return sendSuccess(res, {
+    message: "Equipment retrieved successfully",
+    data: equipment,
+  });
+},
 
-    return sendSuccess(res, {
-      message: "Equipment updated successfully",
-      data: result,
-    });
-  }
+async approveEquipment(req: Request, res: Response) {
+  const equipment = await equipmentService.approveEquipment(req.params.id as string);
 
-  async deleteEquipment(req: Request, res: Response) {
-    const result = await equipmentService.deleteEquipment(req.params.id as string);
+  return sendSuccess(res, {
+    message: "Equipment approved successfully",
+    data: equipment,
+  });
+},
 
-    return sendSuccess(res, {
-      message: "Equipment deleted successfully",
-      data: result,
-    });
-  }
+async rejectEquipment(req: Request, res: Response) {
+  const equipment = await equipmentService.rejectEquipment(req.params.id as string);
 
-    async addPhotos(req: Request, res: Response) {
-    const result = await equipmentService.addPhotos(req.params.id as string);
+  return sendSuccess(res, {
+    message: "Equipment rejected successfully",
+    data: equipment,
+  });
+},
 
-    return sendSuccess(res, {
-      message: "Photos added successfully",
-      data: result,
-    });
-  }
+async adminDeleteEquipment(req: Request, res: Response) {
+  await equipmentService.adminDeleteEquipment(req.params.id as string);
 
-  async deletePhoto(req: Request, res: Response) {
-    const result = await equipmentService.deletePhoto(
-      req.params.id as string,
-      req.params.photoId as string,
-    );
-
-    return sendSuccess(res, {
-      message: "Photo deleted successfully",
-      data: result,
-    });
-  }
-
-  async setPrimaryPhoto(req: Request, res: Response) {
-    const result = await equipmentService.setPrimaryPhoto(
-      req.params.id as string,
-      req.params.photoId as string,
-    );
-
-    return sendSuccess(res, {
-      message: "Primary photo updated successfully",
-      data: result,
-    });
-  }
-
-  async getAvailability(req: Request, res: Response) {
-    const result = await equipmentService.getAvailability(req.params.id as string);
-
-    return sendSuccess(res, {
-      message: "Availability retrieved successfully",
-      data: result,
-    });
-  }
-
-  async updateAvailability(req: Request, res: Response) {
-    const result = await equipmentService.updateAvailability(req.params.id as string);
-
-    return sendSuccess(res, {
-      message: "Availability updated successfully",
-      data: result,
-    });
-  }
-
-  async blockDates(req: Request, res: Response) {
-    const result = await equipmentService.blockDates(req.params.id as string);
-
-    return sendSuccess(res, {
-      message: "Dates blocked successfully",
-      data: result,
-    });
-  }
-
-  async unblockDates(req: Request, res: Response) {
-    const result = await equipmentService.unblockDates(
-      req.params.id as string,
-      req.params.blockId as string,
-    );
-
-    return sendSuccess(res, {
-      message: "Dates unblocked successfully",
-      data: result,
-    });
-  }
-
-  async getAllEquipment(req: Request, res: Response) {
-    const result = await equipmentService.getAllEquipment();
-
-    return sendSuccess(res, {
-      message: "Equipment retrieved successfully",
-      data: result,
-    });
-  }
-
-  async approveEquipment(req: Request, res: Response) {
-    const result = await equipmentService.approveEquipment(req.params.id as string);
-
-    return sendSuccess(res, {
-      message: "Equipment approved successfully",
-      data: result,
-    });
-  }
-
-  async rejectEquipment(req: Request, res: Response) {
-    const result = await equipmentService.rejectEquipment(req.params.id as string);
-
-    return sendSuccess(res, {
-      message: "Equipment rejected successfully",
-      data: result,
-    });
-  }
-
-  async adminDeleteEquipment(req: Request, res: Response) {
-    const result = await equipmentService.adminDeleteEquipment(req.params.id as string);
-
-    return sendSuccess(res, {
-      message: "Equipment deleted successfully",
-      data: result,
-    });
-  }
+  return sendSuccess(res, {
+    message: "Equipment deleted successfully",
+  });
+},
 }
 
-export const equipmentController = new EquipmentController();

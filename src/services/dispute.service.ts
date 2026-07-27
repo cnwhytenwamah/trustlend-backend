@@ -1,26 +1,35 @@
+import { DisputeRepository } from "../repositories/dispute.repository";
+
+const disputeRepository = new DisputeRepository();
+
 class DisputeService {
   async createDispute() {
     return {};
   }
 
-  async getMyDisputes() {
-    return [];
+  async getMyDisputes(raisedById: string) {
+    return disputeRepository.findByRaisedById(raisedById);
   }
 
   async getAllDisputes() {
-    return [];
+    return disputeRepository.findAll();
   }
 
   async getDisputeById(id: string) {
-    return { id };
+    return disputeRepository.findById(id);
   }
 
   async resolveDispute(id: string) {
-    return { id };
+    return disputeRepository.update(id, {
+      status: "resolved",
+      resolvedAt: new Date(),
+    });
   }
 
   async closeDispute(id: string) {
-    return { id };
+    return disputeRepository.update(id, {
+      status: "closed",
+    });
   }
 }
 

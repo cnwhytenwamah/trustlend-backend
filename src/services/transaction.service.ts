@@ -1,6 +1,10 @@
+import { TransactionRepository } from "../repositories/transaction.repository";
+
+const transactionRespository = new TransactionRepository();
+
 class TransactionService {
-    async getMyTransactions(req: any) {
-        return [];
+    async getMyTransactions(userId: string) {
+        return transactionRespository.findByUserId(userId) ;
     }
 
     async getAllTransactions() {

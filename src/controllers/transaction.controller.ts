@@ -1,16 +1,23 @@
 import { Request, Response } from "express";
 import { sendSuccess } from "../utils/apiResponse";
 import { transactionService } from "../services/transaction.service";
+import { AppError } from "../utils/AppError";
 
 class TransactionController {
     async getMyTransactions(req: Request, res: Response) {
-        const result = await transactionService.getMyTransactions(req);
+        if (!req.user) {
+            throw AppError.unauthorized("Authentication required");
+     }
 
-        return sendSuccess(res, {
-            message: "Transactions retrieved successfully",
-            data: result,
-        });
-    }
+     const result = await transactionService.getMyTransactions(
+        req.user.userId
+     );
+
+     return sendSuccess(res, {
+        message: "Transactions retrieved successfully",
+        data: result,
+     });
+}
 
     async getAllTransactions(req: Request, res: Response) {
         const result = await transactionService.getAllTransactions();

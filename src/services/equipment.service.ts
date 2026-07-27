@@ -1,71 +1,51 @@
-class EquipmentService {
-  async createEquipment() {
-    return {};
-  }
+import { EquipmentRepository } from "../repositories/equipment.repository";
+import { CreateEquipmentInput } from "../validators/equipment.validator";
 
-  async getEquipment() {
-    return [];
-  }
+const equipmentRepository = new EquipmentRepository();
 
-  async getMyEquipment() {
-    return [];
-  }
+export const equipmentService = {
+  async create(ownerId: string, input: CreateEquipmentInput) {
+    const equipment = await equipmentRepository.create({
+      ownerId,
+      title: input.title,
+      description: input.description,
+      category: input.category,
+      brand: input.brand ?? null,
+      model: input.model ?? null,
+      condition: input.condition ?? null,
+      dailyRate: input.dailyRate,
+      weeklyRate: input.weeklyRate ?? null,
+      securityDepositAmount: input.securityDepositAmount,
+      address: input.address ?? null,
+      latitude: input.latitude ?? null,
+      longitude: input.longitude ?? null,
+      status: "draft",
+    } as never);
 
-  async getEquipmentById(id: string) {
-    return { id };
-  }
+    return equipment;
+  },
 
-  async updateEquipment(id: string) {
-    return { id };
-  }
+  async listEquipment() {
+    return equipmentRepository.findAll();
+  },
 
-  async deleteEquipment(id: string) {
-    return { id };
-  }
+  async listMyEquipment(ownerId: string) {
+    return equipmentRepository.findByOwnerId(ownerId);
+  },
 
-  async addPhotos(id: string) {
-    return { id };
-  }
+async getAllEquipment() {
+  return equipmentRepository.findAllEquipment();
+},
 
-  async deletePhoto(id: string, photoId: string) {
-    return { id, photoId };
-  }
+async approveEquipment(id: string) {
+  return equipmentRepository.approveEquipment(id);
+},
 
-  async setPrimaryPhoto(id: string, photoId: string) {
-    return { id, photoId };
-  }
+async rejectEquipment(id: string) {
+  return equipmentRepository.rejectEquipment(id);
+},
 
-  async getAvailability(id: string) {
-    return { id };
-  }
-
-  async updateAvailability(id: string) {
-    return { id };
-  }
-
-  async blockDates(id: string) {
-    return { id };
-  }
-
-  async unblockDates(id: string, blockId: string) {
-    return { id, blockId };
-  }
-
-  async getAllEquipment() {
-    return [];
-  }
-
-  async approveEquipment(id: string) {
-    return { id };
-  }
-
-  async rejectEquipment(id: string) {
-    return { id };
-  }
-
-  async adminDeleteEquipment(id: string) {
-    return { id };
-  }
-}
-
-export const equipmentService = new EquipmentService();
+async adminDeleteEquipment(id: string) {
+  return equipmentRepository.adminDeleteEquipment(id)
+},
+};

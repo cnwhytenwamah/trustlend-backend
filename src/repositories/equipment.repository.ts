@@ -1,13 +1,41 @@
+import { id } from "zod/v4/locales";
 import { Equipment } from "../models";
 import { BaseRepository } from "./base.repository";
 
-/**
- * TODO: add Equipment-specific queries here as they are needed
- * (e.g. filters, joins, geo lookups). The generic CRUD from
- * BaseRepository already covers findById, findAll, create, update, delete.
- */
 export class EquipmentRepository extends BaseRepository<Equipment> {
   constructor() {
     super(Equipment);
   }
+
+  async findByOwnerId(ownerId: string) {
+    return this.model.findAll({
+      where: {
+        ownerId,
+      },
+      order: [["createdAt", "DESC"]],
+    });
+  }
+
+
+async findAllEquipment() {
+  return this.findAll({
+    order: [["createdAt", "DESC"]],
+  });
+}
+
+async approveEquipment(id: string) {
+  return this.update(id,{
+    status: "approved",
+  } as never);
+}
+
+async rejectEquipment(id: string) {
+  return this.update(id,{
+    status: "rejected",
+  } as never);
+}
+
+async adminDeleteEquipment(id: string) {
+  return this.delete(id);
+}
 }

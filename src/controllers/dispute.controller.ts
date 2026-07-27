@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { sendSuccess } from "../utils/apiResponse";
 import { disputeService } from "../services/dispute.service";
+import { AppError } from "../utils/AppError";
 
 class DisputeController {
     async createDispute(req: Request, res: Response) {
@@ -13,13 +14,19 @@ class DisputeController {
     }
 
     async getMyDisputes(req: Request, res: Response) {
-        const result = await disputeService.getMyDisputes();
+      if (!req.user) {
+        throw AppError.unauthorized("Authentication required");
+      }
 
-        return sendSuccess(res, {
-            message: "Disputes retrieved successfully",
-            data: result,
-        });
-    }
+      const result = await disputeService.getMyDisputes(
+        req.user.userId
+      );
+
+      return sendSuccess(res, {
+         message: "Disputes retrieved successfully",
+         data: result,
+      });
+   }
 
     async getAllDisputes(req: Request, res: Response) {
         const result = await disputeService.getAllDisputes();
