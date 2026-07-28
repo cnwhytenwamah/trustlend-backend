@@ -17,6 +17,6 @@ router.patch(
   asyncHandler(userController.updateProfilePhoto),
 );
 router.delete('/me', requireAuth, asyncHandler(userController.deleteMe));
-router.get('/:id', validate(userIdParamSchema, 'params'), asyncHandler(userController.getById));
+router.get('/:id', requireAuth, validate(userIdParamSchema, 'params'), asyncHandler(userController.getById));
 
 export default router;
