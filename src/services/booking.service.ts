@@ -14,15 +14,6 @@ export const bookingService = {
       throw AppError.notFound('Equipment not found');
     }
 
-    // Get raw data to avoid Sequelize field issues
-    const equipmentData = equipment.toJSON ? equipment.toJSON() : equipment;
-
-    console.log('Equipment data:', {
-      id: equipmentData.id,
-      ownerId: equipmentData.ownerId,
-      dailyRate: equipmentData.dailyRate
-    });
-
     const existingBookings = await bookingRepo.findAll({
       where: {
         equipmentId: data.equipmentId,
@@ -43,15 +34,15 @@ export const bookingService = {
     }
 
     const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    const dailyRate = equipmentData.dailyRate;
+    const dailyRate = equipment.dailyRate;
     const rentalAmount = days * dailyRate;
-    const depositAmount = equipmentData.securityDepositAmount || 0;
+    const depositAmount = equipment.securityDepositAmount || 0;
     const totalAmount = rentalAmount + depositAmount;
 
     const booking = await bookingRepo.create({
       renterId,
       equipmentId: data.equipmentId,
-      ownerId: equipmentData.ownerId,
+      ownerId: equipment.ownerId,
       startDate: data.startDate,
       endDate: data.endDate,
       dailyRate,
