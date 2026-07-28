@@ -105,11 +105,13 @@ export const bookingService = {
       throw AppError.notFound('Booking not found');
     }
 
-    if (booking.ownerId !== userId) {
+    const bookingData = booking.toJSON ? booking.toJSON() : booking;
+
+    if (bookingData.ownerId !== userId) {
       throw AppError.forbidden('You are not authorized to accept this booking');
     }
 
-    if (booking.status !== 'pending') {
+    if (bookingData.status !== 'pending') {
       throw AppError.badRequest('Only pending bookings can be accepted');
     }
 
@@ -122,11 +124,13 @@ export const bookingService = {
       throw AppError.notFound('Booking not found');
     }
 
-    if (booking.ownerId !== userId) {
+    const bookingData = booking.toJSON ? booking.toJSON() : booking;
+
+    if (bookingData.ownerId !== userId) {
       throw AppError.forbidden('You are not authorized to decline this booking');
     }
 
-    if (booking.status !== 'pending') {
+    if (bookingData.status !== 'pending') {
       throw AppError.badRequest('Only pending bookings can be declined');
     }
 
@@ -142,11 +146,13 @@ export const bookingService = {
       throw AppError.notFound('Booking not found');
     }
 
-    if (booking.ownerId !== userId) {
+    const bookingData = booking.toJSON ? booking.toJSON() : booking;
+
+    if (bookingData.ownerId !== userId) {
       throw AppError.forbidden('You are not authorized to start this booking');
     }
 
-    if (booking.status !== 'accepted') {
+    if (bookingData.status !== 'accepted') {
       throw AppError.badRequest('Only accepted bookings can be started');
     }
 
@@ -159,11 +165,13 @@ export const bookingService = {
       throw AppError.notFound('Booking not found');
     }
 
-    if (booking.ownerId !== userId) {
+    const bookingData = booking.toJSON ? booking.toJSON() : booking;
+
+    if (bookingData.ownerId !== userId) {
       throw AppError.forbidden('You are not authorized to complete this booking');
     }
 
-    if (booking.status !== 'in_progress') {
+    if (bookingData.status !== 'in_progress') {
       throw AppError.badRequest('Only in-progress bookings can be completed');
     }
 
