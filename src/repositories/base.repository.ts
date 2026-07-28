@@ -69,4 +69,17 @@ export class BaseRepository<T extends Model> {
   async count(where: WhereOptions<Attributes<T>> = {}): Promise<number> {
     return this.model.count({ where });
   }
+
+  /**
+   * Update multiple records matching a condition
+   * @param where - The condition to match records
+   * @param data - The data to update
+   * @returns The number of updated records
+   */
+  async updateAll(where: WhereOptions<Attributes<T>>, data: Partial<Attributes<T>>): Promise<number> {
+    const [count] = await this.model.update(data, {
+      where,
+    });
+    return count;
+  }
 }

@@ -1,13 +1,33 @@
 import { Issue } from "../models";
 import { BaseRepository } from "./base.repository";
 
-/**
- * TODO: add Issue-specific queries here as they are needed
- * (e.g. filters, joins, geo lookups). The generic CRUD from
- * BaseRepository already covers findById, findAll, create, update, delete.
- */
 export class IssueRepository extends BaseRepository<Issue> {
   constructor() {
     super(Issue);
+  }
+
+  async findById(id: string) {
+    return this.model.findByPk(id);
+  }
+
+  async findByReporterId(reporterId: string) {
+    return this.model.findAll({
+      where: {
+        reporterId,
+      },
+      order: [["createdAt", "DESC"]],
+    });
+  }
+
+  async updateById(id: string, data: Partial<Issue>) {
+    const issue = await this.model.findByPk(id);
+
+    if (!issue) {
+      return null;
+    }
+
+    await issue.update(data);
+
+    return issue;
   }
 }
