@@ -10,13 +10,13 @@ import depositRoutes from './v1/deposit.routes';
 import reviewRoutes from './v1/review.routes';
 import issueRoutes from './v1/issue.routes';
 import earningRoutes from './v1/earning.routes';
+import notificationRoutes from './v1/notification.routes';
 import adminRoutes from './v1/admin.routes';
 import disputeRoutes from './v1/dispute.routes';
 import damageClaimRoutes from './v1/damageClaim.routes';
 import refundRoutes from './v1/refund.routes';
 import transactionRoutes from './v1/transaction.routes';
 import analyticsRoutes from './v1/analytics.routes';
-import notificationRoutes from './v1/notification.routes';
 
 const router = Router();
 
@@ -37,12 +37,12 @@ router.use('/', depositRoutes);
 router.use('/', reviewRoutes);
 router.use('/', issueRoutes);
 router.use('/', earningRoutes);
+router.use('/', notificationRoutes);
 router.use('/', adminRoutes);
 router.use('/', disputeRoutes);
 router.use('/', damageClaimRoutes);
 router.use('/', refundRoutes);
 router.use('/', transactionRoutes);
 router.use('/', analyticsRoutes);
-router.use('/', notificationRoutes);
 
 export default router;
