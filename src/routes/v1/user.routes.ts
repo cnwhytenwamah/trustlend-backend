@@ -1,3 +1,4 @@
+// User profile routes
 import { Router } from 'express';
 import { userController } from '../../controllers/user.controller';
 import { asyncHandler } from '../../utils/asyncHandler';
