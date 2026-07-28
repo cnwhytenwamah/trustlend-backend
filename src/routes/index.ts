@@ -2,6 +2,7 @@ import { Router } from 'express';
 import authRoutes from './v1/auth.routes';
 import userRoutes from './v1/user.routes';
 import verificationRoutes from './v1/verification.routes';
+import availabilityRoutes from './v1/availability.routes';
 import equipmentRoutes from './v1/equipment.routes';
 import bookingRoutes from './v1/booking.routes';
 import paymentRoutes from './v1/payment.routes';
@@ -28,6 +29,7 @@ const router = Router();
 router.use('/auth', authRoutes); // exception: auth.routes.ts uses relative paths under /auth
 router.use('/users', userRoutes); // exception: user.routes.ts uses relative paths under /users
 router.use('/', verificationRoutes);
+router.use('/', availabilityRoutes);
 router.use('/', equipmentRoutes);
 router.use('/', bookingRoutes);
 router.use('/', paymentRoutes);
