@@ -4,90 +4,137 @@ import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
 import { upload } from "../../middlewares/upload.middleware";
 import { equipmentController } from "../../controllers/equipment.controller";
 import { validate } from "../../middlewares/validate.middleware";
-import { createEquipmentSchema } from "../../validators/equipment.validator";
 import { notImplemented } from "../../controllers/_stub";
-
+import {
+  createEquipmentSchema,
+  updateEquipmentSchema,
+} from "../../validators/equipment.validator";
 
 const router = Router();
 
-// --- Equipment CRUD ---
+// --------------------
+// Equipment CRUD
+// --------------------
+
 router.post(
   "/equipment",
   requireAuth,
   validate(createEquipmentSchema),
   asyncHandler(equipmentController.create)
 );
-router.get("/equipment", asyncHandler(equipmentController.listEquipment));// public search/browse
+
+router.get(
+  "/equipment",
+  asyncHandler(equipmentController.listEquipment)
+);
+
 router.get(
   "/equipment/my",
   requireAuth,
   asyncHandler(equipmentController.myListings)
 );
-router.get("/equipment/:id", asyncHandler(notImplemented("equipment.getById"))); // public
-router.patch("/equipment/:id", requireAuth, asyncHandler(notImplemented("equipment.update")));
-router.delete("/equipment/:id", requireAuth, asyncHandler(notImplemented("equipment.delete")));
 
 
 // --- Equipment photos ---
+router.get(
+  "/equipment/:id",
+  asyncHandler(equipmentController.getById)
+);
+
+router.patch(
+  "/equipment/:id",
+  requireAuth,
+  validate(updateEquipmentSchema),
+  asyncHandler(equipmentController.update)
+);
+
+router.delete(
+  "/equipment/:id",
+  requireAuth,
+  asyncHandler(equipmentController.delete)
+);
+
+// --------------------
+// Equipment Photos
+// --------------------
+
 router.post(
   "/equipment/:id/photos",
   requireAuth,
   upload.array("photos", 10),
-  asyncHandler(equipmentController.addPhotos),
+  asyncHandler(equipmentController.addPhotos)
 );
+
 router.delete(
   "/equipment/:id/photos/:photoId",
   requireAuth,
-  asyncHandler(equipmentController.deletePhoto),
+  asyncHandler(equipmentController.deletePhoto)
 );
+
 router.patch(
   "/equipment/:id/photos/:photoId/primary",
   requireAuth,
   asyncHandler(equipmentController.setPrimaryPhoto),
 );
 
-// --- Availability ---
-router.get("/equipment/:id/availability", asyncHandler(equipmentController.getAvailability)); // public
+
+// --------------------
+// Availability
+// --------------------
+
+router.get(
+  "/equipment/:id/availability",
+  asyncHandler(notImplemented("equipment.getAvailability"))
+);
+
 router.patch(
   "/equipment/:id/availability",
   requireAuth,
-  asyncHandler(equipmentController.updateAvailability),
+  asyncHandler(notImplemented("equipment.updateAvailability"))
 );
+
 router.post(
   "/equipment/:id/block-dates",
   requireAuth,
-  asyncHandler(equipmentController.blockDates),
+  asyncHandler(notImplemented("equipment.blockDates"))
 );
+
 router.delete(
   "/equipment/:id/block-dates/:blockId",
   requireAuth,
-  asyncHandler(equipmentController.unblockDates),
+  asyncHandler(notImplemented("equipment.unblockDates"))
 );
 
-// --- Admin moderation ---
+// --------------------
+// Admin Moderation
+// --------------------
+
 router.get(
   "/admin/equipment",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(equipmentController.getAllEquipment),
+  asyncHandler(notImplemented("equipment.adminList"))
 );
+
 router.patch(
   "/admin/equipment/:id/approve",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(equipmentController.approveEquipment),
+  asyncHandler(notImplemented("equipment.approve"))
 );
+
 router.patch(
   "/admin/equipment/:id/reject",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(equipmentController.rejectEquipment),
+  asyncHandler(notImplemented("equipment.reject"))
 );
+
 router.delete(
   "/admin/equipment/:id",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(equipmentController.adminDeleteEquipment),
+  asyncHandler(notImplemented("equipment.adminDelete"))
 );
 
 export default router;

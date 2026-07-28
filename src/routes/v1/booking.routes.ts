@@ -1,21 +1,28 @@
 import { Router } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth } from "../../middlewares/auth.middleware";
-import { notImplemented } from "../../controllers/_stub";
+import { validate } from "../../middlewares/validate.middleware";
+import { bookingController } from "../../controllers/booking.controller";
+import {
+  createBookingSchema,
+  bookingIdParamSchema,
+  cancelBookingSchema,
+  declineBookingSchema,
+} from "../../validators/booking.validator";
 
 const router = Router();
 
-// --- Renter actions ---
-router.post("/bookings", requireAuth, asyncHandler(notImplemented("bookings.create")));
-router.get("/bookings/my", requireAuth, asyncHandler(notImplemented("bookings.myBookings")));
-router.get("/bookings/:id", requireAuth, asyncHandler(notImplemented("bookings.getById")));
-router.patch("/bookings/:id/cancel", requireAuth, asyncHandler(notImplemented("bookings.cancel")));
+// Renter actions
+router.post("/bookings", requireAuth, validate(createBookingSchema), asyncHandler(bookingController.create));
+router.get("/bookings/my", requireAuth, asyncHandler(bookingController.getMyBookings));
+router.get("/bookings/:id", requireAuth, validate(bookingIdParamSchema, "params"), asyncHandler(bookingController.getById));
+router.patch("/bookings/:id/cancel", requireAuth, validate(bookingIdParamSchema, "params"), validate(cancelBookingSchema), asyncHandler(bookingController.cancel));
 
-// --- Owner actions ---
-router.get("/owner/bookings", requireAuth, asyncHandler(notImplemented("bookings.ownerBookings")));
-router.patch("/bookings/:id/accept", requireAuth, asyncHandler(notImplemented("bookings.accept")));
-router.patch("/bookings/:id/decline", requireAuth, asyncHandler(notImplemented("bookings.decline")));
-router.patch("/bookings/:id/start", requireAuth, asyncHandler(notImplemented("bookings.start")));
-router.patch("/bookings/:id/complete", requireAuth, asyncHandler(notImplemented("bookings.complete")));
+// Owner actions
+router.get("/owner/bookings", requireAuth, asyncHandler(bookingController.getOwnerBookings));
+router.patch("/bookings/:id/accept", requireAuth, validate(bookingIdParamSchema, "params"), asyncHandler(bookingController.accept));
+router.patch("/bookings/:id/decline", requireAuth, validate(bookingIdParamSchema, "params"), validate(declineBookingSchema), asyncHandler(bookingController.decline));
+router.patch("/bookings/:id/start", requireAuth, validate(bookingIdParamSchema, "params"), asyncHandler(bookingController.start));
+router.patch("/bookings/:id/complete", requireAuth, validate(bookingIdParamSchema, "params"), asyncHandler(bookingController.complete));
 
 export default router;

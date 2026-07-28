@@ -7,6 +7,44 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
     super(Equipment);
   }
 
+  async findAll() {
+    return this.model.findAll({
+      where: {
+        status: "active",
+      },
+
+      include: [
+        {
+          association: "photos",
+          attributes: [
+            "id",
+            "url",
+            "isPrimary",
+            "sortOrder",
+          ],
+          where: {
+            isPrimary: true,
+          },
+          required: false,
+        },
+
+        {
+          association: "owner",
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "profilePhotoUrl",
+          ],
+        },
+      ],
+
+      order: [
+        ["createdAt", "DESC"],
+      ],
+    });
+  }
+
   async findByOwnerId(ownerId: string) {
     return this.model.findAll({
       where: {
@@ -18,7 +56,7 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
 
 
 async findAllEquipment() {
-  return this.findAll({
+  return this.model.findAll({
     order: [["createdAt", "DESC"]],
   });
 }
@@ -38,4 +76,56 @@ async rejectEquipment(id: string) {
 async adminDeleteEquipment(id: string) {
   return this.delete(id);
 }
+  async findById(id: string) {
+    return this.model.findByPk(id, {
+      include: [
+        {
+          association: "photos",
+          attributes: [
+            "id",
+            "url",
+            "isPrimary",
+            "sortOrder",
+          ],
+          order: [
+            ["sortOrder", "ASC"],
+          ],
+        },
+
+        {
+          association: "owner",
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "profilePhotoUrl",
+          ],
+        },
+      ],
+    });
+  }
+
+  async updateById(id: string, data: Partial<Equipment>) {
+    const equipment = await this.model.findByPk(id);
+
+    if (!equipment) {
+      return null;
+    }
+
+    await equipment.update(data);
+
+    return equipment;
+  }
+
+  async deleteById(id: string) {
+    const equipment = await this.model.findByPk(id);
+
+    if (!equipment) {
+      return null;
+    }
+
+    await equipment.destroy();
+
+    return true;
+  }
 }

@@ -51,24 +51,24 @@ export class Equipment
   extends Model<EquipmentAttributes, EquipmentCreationAttributes>
   implements EquipmentAttributes
 {
-  public id!: string;
-  public ownerId!: string;
-  public title!: string;
-  public description!: string;
-  public category!: string;
-  public brand!: string | null;
-  public model!: string | null;
-  public condition!: string | null;
-  public dailyRate!: number;
-  public weeklyRate!: number | null;
-  public securityDepositAmount!: number;
-  public address!: string | null;
-  public latitude!: number | null;
-  public longitude!: number | null;
-  public status!: EquipmentStatus;
-  public rejectionReason!: string | null;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare id: string;
+declare ownerId: string;
+declare title: string;
+declare description: string;
+declare category: string;
+declare brand: string | null;
+declare model: string | null;
+declare condition: string | null;
+declare dailyRate: number;
+declare weeklyRate: number | null;
+declare securityDepositAmount: number;
+declare address: string | null;
+declare latitude: number | null;
+declare longitude: number | null;
+declare status: EquipmentStatus;
+declare rejectionReason: string | null;
+declare readonly createdAt: Date;
+declare readonly updatedAt: Date;
 }
 
 Equipment.init(
