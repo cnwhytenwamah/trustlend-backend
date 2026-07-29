@@ -1,33 +1,67 @@
-import { Router } from "express";
-import { asyncHandler } from "../../utils/asyncHandler";
-import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
-import { notImplemented } from "../../controllers/_stub";
+import { Router } from 'express';
+import { asyncHandler } from '../../utils/asyncHandler';
+import {
+  requireAuth,
+  requireRole,
+} from '../../middlewares/auth.middleware';
+import { validate } from '../../middlewares/validate.middleware';
+import { verificationController } from '../../controllers/verification.controller';
+import {
+  createVerificationSchema,
+  updateVerificationSchema,
+  rejectVerificationSchema,
+} from '../../validators/verification.validator';
 
 const router = Router();
 
-// --- Identity verification (self-service) ---
-router.post("/verifications", requireAuth, asyncHandler(notImplemented("verifications.submit")));
-router.get("/verifications/me", requireAuth, asyncHandler(notImplemented("verifications.getMine")));
-router.patch("/verifications/me", requireAuth, asyncHandler(notImplemented("verifications.updateMine")));
+// --------------------
+// Identity Verification
+// --------------------
 
-// --- Admin review ---
+router.post(
+  '/verifications',
+  requireAuth,
+  validate(createVerificationSchema),
+  asyncHandler(verificationController.create)
+);
+
 router.get(
-  "/admin/verifications",
+  '/verifications/me',
   requireAuth,
-  requireRole("admin"),
-  asyncHandler(notImplemented("verifications.adminList")),
+  asyncHandler(verificationController.me)
 );
+
 router.patch(
-  "/admin/verifications/:id/approve",
+  '/verifications/me',
   requireAuth,
-  requireRole("admin"),
-  asyncHandler(notImplemented("verifications.approve")),
+  validate(updateVerificationSchema),
+  asyncHandler(verificationController.update)
 );
-router.patch(
-  "/admin/verifications/:id/reject",
+
+// --------------------
+// Admin Verification Management
+// --------------------
+
+router.get(
+  '/admin/verifications',
   requireAuth,
-  requireRole("admin"),
-  asyncHandler(notImplemented("verifications.reject")),
+  requireRole('admin'),
+  asyncHandler(verificationController.list)
+);
+
+router.patch(
+  '/admin/verifications/:id/approve',
+  requireAuth,
+  requireRole('admin'),
+  asyncHandler(verificationController.approve)
+);
+
+router.patch(
+  '/admin/verifications/:id/reject',
+  requireAuth,
+  requireRole('admin'),
+  validate(rejectVerificationSchema),
+  asyncHandler(verificationController.reject)
 );
 
 export default router;
