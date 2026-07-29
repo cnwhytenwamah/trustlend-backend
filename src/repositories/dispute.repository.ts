@@ -10,4 +10,11 @@ export class DisputeRepository extends BaseRepository<Dispute> {
   constructor() {
     super(Dispute);
   }
-}
+
+  async findByRaisedById(raisedById: string) {
+  return this.findAll({
+    where: { raisedById },
+    order: [["createdAt", "DESC"]],
+  });
+ }
+};

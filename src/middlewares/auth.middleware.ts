@@ -21,9 +21,9 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction) {
   try {
     req.user = verifyAccessToken(token);
     next();
-  } catch {
-    throw AppError.unauthorized('Invalid or expired token');
-  }
+  } catch (error) {
+  throw AppError.unauthorized('Invalid or expired token');
+}
 }
 
 /**

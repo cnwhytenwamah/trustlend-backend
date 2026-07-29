@@ -3,8 +3,8 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
 import { upload } from "../../middlewares/upload.middleware";
 import { equipmentController } from "../../controllers/equipment.controller";
-import { notImplemented } from "../../controllers/_stub";
 import { validate } from "../../middlewares/validate.middleware";
+import { notImplemented } from "../../controllers/_stub";
 import {
   createEquipmentSchema,
   updateEquipmentSchema,
@@ -34,6 +34,8 @@ router.get(
   asyncHandler(equipmentController.myListings)
 );
 
+
+// --- Equipment photos ---
 router.get(
   "/equipment/:id",
   asyncHandler(equipmentController.getById)
@@ -72,8 +74,9 @@ router.delete(
 router.patch(
   "/equipment/:id/photos/:photoId/primary",
   requireAuth,
-  asyncHandler(equipmentController.setPrimaryPhoto)
+  asyncHandler(equipmentController.setPrimaryPhoto),
 );
+
 
 // --------------------
 // Availability
@@ -110,28 +113,28 @@ router.get(
   "/admin/equipment",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.adminList"))
+  asyncHandler(equipmentController.getAllEquipment)
 );
 
 router.patch(
   "/admin/equipment/:id/approve",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.approve"))
+  asyncHandler(equipmentController.approveEquipment)
 );
 
 router.patch(
   "/admin/equipment/:id/reject",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.reject"))
+  asyncHandler(equipmentController.rejectEquipment)
 );
 
 router.delete(
   "/admin/equipment/:id",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.adminDelete"))
+  asyncHandler(equipmentController.adminDeleteEquipment)
 );
 
 export default router;

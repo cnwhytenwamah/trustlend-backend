@@ -10,4 +10,11 @@ export class TransactionRepository extends BaseRepository<Transaction> {
   constructor() {
     super(Transaction);
   }
+
+  async findByUserId(userId: string) {
+    return this.findAll({
+      where: { userId },
+      order: [["createdAt", "DESC"]],
+    });
+  }
 }

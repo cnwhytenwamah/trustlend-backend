@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response} from "express";
 import { equipmentService } from "../services/equipment.service";
 import { sendSuccess } from "../utils/apiResponse";
 import { AppError } from "../utils/AppError";
@@ -39,11 +39,46 @@ export const equipmentController = {
       req.user.userId
     );
 
-    return sendSuccess(res, {
-      message: "Your equipment retrieved successfully",
-      data: equipment,
-    });
-  },
+  return sendSuccess(res, {
+    message: "Your equipment retrieved successfully",
+    data: equipment,
+  });
+},
+
+async getAllEquipment(_req: Request, res: Response) {
+  const equipment = await equipmentService.getAllEquipment();
+
+  return sendSuccess(res, {
+    message: "Equipment retrieved successfully",
+    data: equipment,
+  });
+},
+
+async approveEquipment(req: Request, res: Response) {
+  const equipment = await equipmentService.approveEquipment(req.params.id as string);
+
+  return sendSuccess(res, {
+    message: "Equipment approved successfully",
+    data: equipment,
+  });
+},
+
+async rejectEquipment(req: Request, res: Response) {
+  const equipment = await equipmentService.rejectEquipment(req.params.id as string);
+
+  return sendSuccess(res, {
+    message: "Equipment rejected successfully",
+    data: equipment,
+  });
+},
+
+async adminDeleteEquipment(req: Request, res: Response) {
+  await equipmentService.adminDeleteEquipment(req.params.id as string);
+
+  return sendSuccess(res, {
+    message: "Equipment deleted successfully",
+  });
+},
 
   async getById(req: Request, res: Response) {
     const id = Array.isArray(req.params.id)
@@ -175,3 +210,4 @@ export const equipmentController = {
     });
   },
 };
+

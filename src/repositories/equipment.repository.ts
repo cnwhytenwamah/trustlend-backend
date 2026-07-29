@@ -1,3 +1,4 @@
+import { id } from "zod/v4/locales";
 import { Equipment } from "../models";
 import { BaseRepository } from "./base.repository";
 
@@ -53,6 +54,28 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
     });
   }
 
+
+async findAllEquipment() {
+  return this.model.findAll({
+    order: [["createdAt", "DESC"]],
+  });
+}
+
+async approveEquipment(id: string) {
+  return this.update(id,{
+    status: "approved",
+  } as never);
+}
+
+async rejectEquipment(id: string) {
+  return this.update(id,{
+    status: "rejected",
+  } as never);
+}
+
+async adminDeleteEquipment(id: string) {
+  return this.delete(id);
+}
   async findById(id: string) {
     return this.model.findByPk(id, {
       include: [
