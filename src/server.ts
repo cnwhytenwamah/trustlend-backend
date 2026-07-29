@@ -12,6 +12,9 @@ async function start() {
   if (env.NODE_ENV === 'development') {
     await sequelize.sync({ alter: true });
     console.log('Database synced (dev mode)');
+  } else {
+    await sequelize.sync();
+    console.log('Database synced (production)');
   }
 
   const app = createApp();
