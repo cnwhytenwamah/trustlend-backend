@@ -34,9 +34,9 @@ export const bookingService = {
     }
 
     const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    const dailyRate = equipment.dailyRate;
+    const dailyRate = Number(equipment.dailyRate);
     const rentalAmount = days * dailyRate;
-    const depositAmount = equipment.securityDepositAmount || 0;
+    const depositAmount = Number(equipment.securityDepositAmount) || 0;
     const totalAmount = rentalAmount + depositAmount;
 
     const booking = await bookingRepo.create({
