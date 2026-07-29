@@ -34,7 +34,7 @@ Set `type: secret` for tokens/keys so Postman masks them in the UI — doesn't c
 
 These three modules all need a `Booking` to exist first, and Bookings isn't built yet. Instead of waiting, run a seed script that inserts test data directly:
 
-1. Save `seedTestData.ts` (from the previous message) into your project's `scripts/` folder.
+1. Save `seedTestData.ts` (from the previous message) into your project's `scripts/` folder..
 2. Add this line to `package.json` under `"scripts"`:
    ```json
    "seed:test-data": "ts-node scripts/seedTestData.ts"

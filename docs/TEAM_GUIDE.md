@@ -6,12 +6,12 @@ This is for whoever's picking up a domain from `docs/API_ENDPOINTS.md`. Read thi
 
 Every domain already has:
 - a **repository** in `src/repositories/<domain>.repository.ts` (already extends `BaseRepository`, works out of the box)
-- a **route file** in `src/routes/v1/<domain>.routes.ts` with every endpoint already wired up, guarded with the right `requireAuth`/`requireRole('admin')`, returning `501 Not Implemented`
+- a **route file** in `src/routes/v1/<domain>.routes.ts` with every endpoint already wired up, guarded, with the right `requireAuth`/`requireRole('admin')`, returning `501 Not Implemented`
 
 Your job is to add two files (`src/services/<domain>.service.ts`, `src/controllers/<domain>.controller.ts`) and swap the `501` stubs in your route file for real controller calls.
 
 **Don't touch:**
-- other people's route/service/controller files
+- other people's route/service/controller files 
 - `src/models/` or `src/models/index.ts` (if you need a new field or association, ask in the team channel first — a schema change affects everyone)
 - `src/app.ts`, `src/server.ts`, `src/config/*` (shared infrastructure)
 
