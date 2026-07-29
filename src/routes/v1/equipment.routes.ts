@@ -113,28 +113,28 @@ router.get(
   "/admin/equipment",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.adminList"))
+  asyncHandler(equipmentController.getAllEquipment)
 );
 
 router.patch(
   "/admin/equipment/:id/approve",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.approve"))
+  asyncHandler(equipmentController.approveEquipment)
 );
 
 router.patch(
   "/admin/equipment/:id/reject",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.reject"))
+  asyncHandler(equipmentController.rejectEquipment)
 );
 
 router.delete(
   "/admin/equipment/:id",
   requireAuth,
   requireRole("admin"),
-  asyncHandler(notImplemented("equipment.adminDelete"))
+  asyncHandler(equipmentController.adminDeleteEquipment)
 );
 
 export default router;
