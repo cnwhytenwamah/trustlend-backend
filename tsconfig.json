@@ -12,9 +12,8 @@
     "resolveJsonModule": true,
     "moduleResolution": "NodeNext",
     "ignoreDeprecations": "6.0",
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
