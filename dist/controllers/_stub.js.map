@@ -1,0 +1,1 @@
+{"version":3,"file":"_stub.js","sourceRoot":"","sources":["../../src/controllers/_stub.ts"],"names":[],"mappings":";;AAcA,wCAOC;AAnBD;;;;;;;;;;;GAWG;AACH,SAAgB,cAAc,CAAC,KAAa;IAC1C,OAAO,CAAC,IAAa,EAAE,GAAa,EAAE,EAAE;QACtC,GAAG,CAAC,MAAM,CAAC,GAAG,CAAC,CAAC,IAAI,CAAC;YACnB,OAAO,EAAE,KAAK;YACd,OAAO,EAAE,wBAAwB,KAAK,EAAE;SACzC,CAAC,CAAC;IACL,CAAC,CAAC;AACJ,CAAC"}
