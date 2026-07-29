@@ -33,6 +33,33 @@ exports.equipmentController = {
             data: equipment,
         });
     },
+    async getAllEquipment(_req, res) {
+        const equipment = await equipment_service_1.equipmentService.getAllEquipment();
+        return (0, apiResponse_1.sendSuccess)(res, {
+            message: "Equipment retrieved successfully",
+            data: equipment,
+        });
+    },
+    async approveEquipment(req, res) {
+        const equipment = await equipment_service_1.equipmentService.approveEquipment(req.params.id);
+        return (0, apiResponse_1.sendSuccess)(res, {
+            message: "Equipment approved successfully",
+            data: equipment,
+        });
+    },
+    async rejectEquipment(req, res) {
+        const equipment = await equipment_service_1.equipmentService.rejectEquipment(req.params.id);
+        return (0, apiResponse_1.sendSuccess)(res, {
+            message: "Equipment rejected successfully",
+            data: equipment,
+        });
+    },
+    async adminDeleteEquipment(req, res) {
+        await equipment_service_1.equipmentService.adminDeleteEquipment(req.params.id);
+        return (0, apiResponse_1.sendSuccess)(res, {
+            message: "Equipment deleted successfully",
+        });
+    },
     async getById(req, res) {
         const id = Array.isArray(req.params.id)
             ? req.params.id[0]

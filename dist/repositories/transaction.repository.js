@@ -12,6 +12,12 @@ class TransactionRepository extends base_repository_1.BaseRepository {
     constructor() {
         super(models_1.Transaction);
     }
+    async findByUserId(userId) {
+        return this.findAll({
+            where: { userId },
+            order: [["createdAt", "DESC"]],
+        });
+    }
 }
 exports.TransactionRepository = TransactionRepository;
 //# sourceMappingURL=transaction.repository.js.map

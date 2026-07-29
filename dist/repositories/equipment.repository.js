@@ -49,6 +49,24 @@ class EquipmentRepository extends base_repository_1.BaseRepository {
             order: [["createdAt", "DESC"]],
         });
     }
+    async findAllEquipment() {
+        return this.model.findAll({
+            order: [["createdAt", "DESC"]],
+        });
+    }
+    async approveEquipment(id) {
+        return this.update(id, {
+            status: "approved",
+        });
+    }
+    async rejectEquipment(id) {
+        return this.update(id, {
+            status: "rejected",
+        });
+    }
+    async adminDeleteEquipment(id) {
+        return this.delete(id);
+    }
     async findById(id) {
         return this.model.findByPk(id, {
             include: [

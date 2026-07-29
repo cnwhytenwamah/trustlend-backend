@@ -12,6 +12,13 @@ class DisputeRepository extends base_repository_1.BaseRepository {
     constructor() {
         super(models_1.Dispute);
     }
+    async findByRaisedById(raisedById) {
+        return this.findAll({
+            where: { raisedById },
+            order: [["createdAt", "DESC"]],
+        });
+    }
 }
 exports.DisputeRepository = DisputeRepository;
+;
 //# sourceMappingURL=dispute.repository.js.map

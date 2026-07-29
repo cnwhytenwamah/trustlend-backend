@@ -21,7 +21,7 @@ function requireAuth(req, _res, next) {
         req.user = (0, jwt_1.verifyAccessToken)(token);
         next();
     }
-    catch {
+    catch (error) {
         throw AppError_1.AppError.unauthorized('Invalid or expired token');
     }
 }

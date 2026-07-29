@@ -7,6 +7,7 @@ exports.isDev = exports.isProd = exports.env = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const zod_1 = require("zod");
 dotenv_1.default.config();
+console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
 /**
  * Every environment variable the app needs, validated once at startup.
  * If something is missing/misspelled, the app fails fast with a clear

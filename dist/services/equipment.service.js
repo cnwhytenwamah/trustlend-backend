@@ -34,6 +34,18 @@ exports.equipmentService = {
     async listMyEquipment(ownerId) {
         return equipmentRepository.findByOwnerId(ownerId);
     },
+    async getAllEquipment() {
+        return equipmentRepository.findAllEquipment();
+    },
+    async approveEquipment(id) {
+        return equipmentRepository.approveEquipment(id);
+    },
+    async rejectEquipment(id) {
+        return equipmentRepository.rejectEquipment(id);
+    },
+    async adminDeleteEquipment(id) {
+        return equipmentRepository.adminDeleteEquipment(id);
+    },
     async getById(id) {
         if (!uuidRegex.test(id)) {
             throw AppError_1.AppError.badRequest("Invalid equipment ID");

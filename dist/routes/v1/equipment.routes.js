@@ -5,8 +5,8 @@ const asyncHandler_1 = require("../../utils/asyncHandler");
 const auth_middleware_1 = require("../../middlewares/auth.middleware");
 const upload_middleware_1 = require("../../middlewares/upload.middleware");
 const equipment_controller_1 = require("../../controllers/equipment.controller");
-const _stub_1 = require("../../controllers/_stub");
 const validate_middleware_1 = require("../../middlewares/validate.middleware");
+const _stub_1 = require("../../controllers/_stub");
 const equipment_validator_1 = require("../../validators/equipment.validator");
 const router = (0, express_1.Router)();
 // --------------------
@@ -15,6 +15,7 @@ const router = (0, express_1.Router)();
 router.post("/equipment", auth_middleware_1.requireAuth, (0, validate_middleware_1.validate)(equipment_validator_1.createEquipmentSchema), (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.create));
 router.get("/equipment", (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.listEquipment));
 router.get("/equipment/my", auth_middleware_1.requireAuth, (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.myListings));
+// --- Equipment photos ---
 router.get("/equipment/:id", (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.getById));
 router.patch("/equipment/:id", auth_middleware_1.requireAuth, (0, validate_middleware_1.validate)(equipment_validator_1.updateEquipmentSchema), (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.update));
 router.delete("/equipment/:id", auth_middleware_1.requireAuth, (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.delete));
@@ -34,9 +35,9 @@ router.delete("/equipment/:id/block-dates/:blockId", auth_middleware_1.requireAu
 // --------------------
 // Admin Moderation
 // --------------------
-router.get("/admin/equipment", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)((0, _stub_1.notImplemented)("equipment.adminList")));
-router.patch("/admin/equipment/:id/approve", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)((0, _stub_1.notImplemented)("equipment.approve")));
-router.patch("/admin/equipment/:id/reject", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)((0, _stub_1.notImplemented)("equipment.reject")));
-router.delete("/admin/equipment/:id", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)((0, _stub_1.notImplemented)("equipment.adminDelete")));
+router.get("/admin/equipment", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.getAllEquipment));
+router.patch("/admin/equipment/:id/approve", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.approveEquipment));
+router.patch("/admin/equipment/:id/reject", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.rejectEquipment));
+router.delete("/admin/equipment/:id", auth_middleware_1.requireAuth, (0, auth_middleware_1.requireRole)("admin"), (0, asyncHandler_1.asyncHandler)(equipment_controller_1.equipmentController.adminDeleteEquipment));
 exports.default = router;
 //# sourceMappingURL=equipment.routes.js.map

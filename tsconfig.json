@@ -11,10 +11,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "moduleResolution": "NodeNext",
-    "ignoreDeprecations": "6.0",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
