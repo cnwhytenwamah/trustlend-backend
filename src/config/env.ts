@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 dotenv.config();
 
-console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
+// console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
 
 /**
  * Every environment variable the app needs, validated once at startup.
@@ -12,7 +12,7 @@ console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
  */
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().default(5000),
+  PORT: z.coerce.number().min(1).max(65535).default(5000),
   API_VERSION: z.string().default('v1'),
   CLIENT_URL: z.string().default('http://localhost:3000'),
 
