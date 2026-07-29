@@ -38,8 +38,26 @@ export function createApp(): Application {
     }),
   );
 
+  // app.get('/health', (_req, res) => {
+  //   res.json({ success: true, message: 'TrustLend API is running', timestamp: new Date().toISOString() });
+  // });
+
   app.get('/health', (_req, res) => {
-    res.json({ success: true, message: 'TrustLend API is running', timestamp: new Date().toISOString() });
+    res.json({
+      success: true,
+      message: 'TrustLend API is running',
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  app.get('/', (_req, res) => {
+    res.status(200).json({
+      success: true,
+      message: 'Welcome to the TrustLend API',
+      version: env.API_VERSION,
+      health: '/health',
+      api: `/api/${env.API_VERSION}`,
+    });
   });
 
   app.use(`/api/${env.API_VERSION}`, routes);
