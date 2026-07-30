@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
 
-const PAYSTACK_BASE_URL = 'https://api.paystack.co';
+const PAYSTACK_BASE_URL = env.PAYSTACK_PAYMENT_URL;
 
 interface InitializeTransactionInput {
   email: string;
@@ -44,6 +44,9 @@ export const paystackService = {
         amount: input.amountKobo,
         reference: input.reference,
         metadata: input.metadata ?? {},
+        // Only sent if configured — Paystack falls back to the dashboard's
+        // default callback URL if this key is omitted from the payload.
+        ...(env.PAYMENT_CALLBACK_URL ? { callback_url: env.PAYMENT_CALLBACK_URL } : {}),
       }),
     });
 

@@ -3,8 +3,6 @@ import { z } from 'zod';
 
 dotenv.config();
 
-// console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
-
 /**
  * Every environment variable the app needs, validated once at startup.
  * If something is missing/misspelled, the app fails fast with a clear
@@ -12,7 +10,7 @@ dotenv.config();
  */
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().min(1).max(65535).default(5000),
+  PORT: z.coerce.number().default(5000),
   API_VERSION: z.string().default('v1'),
   CLIENT_URL: z.string().default('http://localhost:3000'),
 
@@ -23,7 +21,7 @@ const envSchema = z.object({
   DB_USER: z.string(),
   DB_PASSWORD: z.string(),
   DB_DIALECT: z.literal('postgres').default('postgres'),
-  DB_SSL: z.string().default("false").transform((value) => value.toLowerCase() === "true"),
+  DB_SSL: z.coerce.boolean().default(false),
 
   // JWT
   JWT_ACCESS_SECRET: z.string().min(10),
@@ -48,6 +46,12 @@ const envSchema = z.object({
   PAYSTACK_SECRET_KEY: z.string().optional().default(''),
   PAYSTACK_PUBLIC_KEY: z.string().optional().default(''),
   PAYSTACK_WEBHOOK_SECRET: z.string().optional().default(''),
+  PAYSTACK_PAYMENT_URL: z.string().optional().default('https://api.paystack.co'),
+  // Where Paystack redirects the browser after checkout completes. Should
+  // point at a frontend route that then shows a "payment complete" state —
+  // e.g. http://localhost:3000/payments/callback. Optional: if left blank,
+  // Paystack falls back to whatever's configured in your dashboard settings.
+  PAYMENT_CALLBACK_URL: z.string().optional().default(''),
 
   // Flutterwave
   FLUTTERWAVE_SECRET_KEY: z.string().optional().default(''),
@@ -68,7 +72,7 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('Invalid or missing environment variables:');
+  console.error('❌ Invalid or missing environment variables:');
   console.error(parsed.error.flatten().fieldErrors);
   process.exit(1);
 }
