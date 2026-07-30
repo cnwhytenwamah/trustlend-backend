@@ -25,18 +25,31 @@ export function errorMiddleware(
     details = err.details;
   } else if (err instanceof Error) {
     message = isDev ? err.message : message;
-  }
 
-  if (!(err instanceof AppError)) {
-    // Unexpected error — log the full thing for debugging.
+    // Log unexpected errors for debugging.
     console.error('Unhandled error:', err);
   }
 
-  res.status(statusCode).json({
-    success: false,
+  const errorResponse: Record<string, unknown> = {
     message,
-    ...(details ? { details } : {}),
-    ...(isDev && err instanceof Error ? { stack: err.stack } : {}),
+  };
+
+  if (details) {
+    errorResponse.details = details;
+  }
+
+  // Only expose stack traces for unexpected errors in development.
+  if (
+    isDev &&
+    !(err instanceof AppError) &&
+    err instanceof Error
+  ) {
+    errorResponse.stack = err.stack;
+  }
+
+  return res.status(statusCode).json({
+    success: false,
+    error: errorResponse,
   });
 }
 
@@ -44,9 +57,14 @@ export function errorMiddleware(
  * Registered before the error middleware to catch requests to
  * routes that don't exist.
  */
-export function notFoundMiddleware(req: Request, res: Response) {
-  res.status(404).json({
+export function notFoundMiddleware(
+  req: Request,
+  res: Response,
+) {
+  return res.status(404).json({
     success: false,
-    message: `Route not found: ${req.method} ${req.originalUrl}`,
+    error: {
+      message: `Route not found: ${req.method} ${req.originalUrl}`,
+    },
   });
 }

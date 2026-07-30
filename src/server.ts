@@ -2,6 +2,7 @@ import { createApp } from './app';
 import { env } from './config/env';
 import { connectDatabase, sequelize } from './config/database';
 import './models'; // ensures all models + associations are registered before sync
+import './jobs/workers/notification.worker';
 
 async function start() {
   await connectDatabase();
