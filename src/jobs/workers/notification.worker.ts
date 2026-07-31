@@ -25,27 +25,58 @@ export const notificationWorker = new Worker<NotificationJobData>(
 
     switch (data.type) {
       case 'verifyEmail': {
-        const { subject, html } = emailTemplates.verifyEmail(data.firstName, data.verifyUrl);
-        await sendEmail({ to: data.to, subject, html });
+        const { subject, html } = emailTemplates.verifyEmail(
+          data.firstName,
+          data.verifyUrl,
+        );
+
+        await sendEmail({
+          to: data.to,
+          subject,
+          html,
+        });
+
         break;
       }
+
       case 'resetPassword': {
-        const { subject, html } = emailTemplates.resetPassword(data.firstName, data.resetUrl);
-        await sendEmail({ to: data.to, subject, html });
+        const { subject, html } = emailTemplates.resetPassword(
+          data.firstName,
+          data.resetUrl,
+        );
+
+        await sendEmail({
+          to: data.to,
+          subject,
+          html,
+        });
+
         break;
       }
-      // TODO: add cases for booking notifications, push (FCM), etc.
+
       default:
         console.warn('Unknown notification job type:', data);
     }
   },
-  { connection: redisConnection },
+  {
+    connection: redisConnection,
+  },
 );
 
+notificationWorker.on('ready', () => {
+  console.log('🚀 Notification Worker is ready');
+});
+
 notificationWorker.on('completed', (job) => {
-  console.log(`Notification job ${job.id} completed`);
+  console.log(`✅ Notification job ${job.id} completed`);
 });
 
 notificationWorker.on('failed', (job, err) => {
-  console.error(`Notification job ${job?.id} failed:`, err.message);
+  console.error(`❌ Notification job ${job?.id} failed`);
+  console.error(err);
+});
+
+notificationWorker.on('error', (err) => {
+  console.error('❌ Worker Error');
+  console.error(err);
 });

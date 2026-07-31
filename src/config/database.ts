@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { env, isDev } from './env';
+import { env } from './env';
 
 export const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
   host: env.DB_HOST,
@@ -15,7 +15,8 @@ export const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD
       }
     : {},
   define: {
-    underscored: true, // created_at / updated_at instead of createdAt / updatedAt
+    // created_at / updated_at instead of createdAt / updatedAt
+    underscored: true,
     timestamps: true,
   },
   pool: {
