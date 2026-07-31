@@ -1,4 +1,3 @@
-import { id } from "zod/v4/locales";
 import { Equipment } from "../models";
 import { BaseRepository } from "./base.repository";
 
@@ -35,6 +34,7 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
             "firstName",
             "lastName",
             "profilePhotoUrl",
+            "isIdentityVerified",
           ],
         },
       ],
@@ -99,6 +99,7 @@ async adminDeleteEquipment(id: string) {
             "firstName",
             "lastName",
             "profilePhotoUrl",
+            "isIdentityVerified",
           ],
         },
       ],
