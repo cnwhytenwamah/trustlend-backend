@@ -1,8 +1,9 @@
+import http from 'http';
 import { createApp } from './app';
 import { env } from './config/env';
 import { connectDatabase, sequelize } from './config/database';
 import './models'; // ensures all models + associations are registered before sync
-import './jobs/workers/notification.worker';
+import { initSockets } from './realtime/socket';
 
 async function start() {
   await connectDatabase();
@@ -13,17 +14,18 @@ async function start() {
   if (env.NODE_ENV === 'development') {
     await sequelize.sync({ alter: true });
     console.log('Database synced (dev mode)');
-  } else {
-    await sequelize.sync();
-    console.log('Database synced (production)');
   }
 
   const app = createApp();
 
-  app.listen(env.PORT, () => {
+  const httpServer = http.createServer(app);
+  initSockets(httpServer);
+
+  httpServer.listen(env.PORT, () => {
     console.log(`TrustLend API listening on http://localhost:${env.PORT}`);
     console.log(`Health check: http://localhost:${env.PORT}/health`);
     console.log(`API base:     http://localhost:${env.PORT}/api/${env.API_VERSION}`);
+    console.log(`WebSocket:    ws://localhost:${env.PORT} (Socket.io)`);
   });
 }
 
