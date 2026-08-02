@@ -45,14 +45,50 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
     });
   }
 
+  // async findByOwnerId(ownerId: string) {
+  //   return this.model.findAll({
+  //     where: {
+  //       ownerId,
+  //     },
+  //     order: [["createdAt", "DESC"]],
+  //   });
+  // }
+
   async findByOwnerId(ownerId: string) {
-    return this.model.findAll({
-      where: {
-        ownerId,
+  return this.model.findAll({
+    where: {
+      ownerId,
+    },
+
+    include: [
+      {
+        association: "photos",
+        attributes: [
+          "id",
+          "url",
+          "isPrimary",
+          "sortOrder",
+        ],
+        where: {
+          isPrimary: true,
+        },
+        required: false,
       },
-      order: [["createdAt", "DESC"]],
-    });
-  }
+      {
+        association: "owner",
+        attributes: [
+          "id",
+          "firstName",
+          "lastName",
+          "profilePhotoUrl",
+          "isIdentityVerified",
+        ],
+      },
+    ],
+
+    order: [["createdAt", "DESC"]],
+  });
+}
 
 
 async findAllEquipment() {
