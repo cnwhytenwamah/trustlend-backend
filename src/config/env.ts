@@ -68,8 +68,24 @@ const envSchema = z.object({
   GOOGLE_MAPS_API_KEY: z.string().optional().default(''),
 
   // Resend
+  // RESEND_API_KEY: z.string().optional().default(''),
+  // EMAIL_FROM: z.string().optional().default('TrustLend <no-reply@trustlend.dev>'),
+
+  // Email
+  EMAIL_PROVIDER: z.enum(['resend', 'nodemailer']).default('resend'),
   RESEND_API_KEY: z.string().optional().default(''),
+
   EMAIL_FROM: z.string().optional().default('TrustLend <no-reply@trustlend.dev>'),
+
+  MAIL_HOST: z.string().optional().default(''),
+
+  MAIL_PORT: z.coerce.number().default(587),
+
+  MAIL_SECURE: z.coerce.boolean().default(false),
+
+  MAIL_USER: z.string().optional().default(''),
+
+  MAIL_PASSWORD: z.string().optional().default(''),
 
   // Firebase
   FIREBASE_SERVICE_ACCOUNT_PATH: z.string().optional().default('./firebase-service-account.json'),
@@ -78,7 +94,7 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('❌ Invalid or missing environment variables:');
+  console.error('Invalid or missing environment variables:');
   console.error(parsed.error.flatten().fieldErrors);
   process.exit(1);
 }
