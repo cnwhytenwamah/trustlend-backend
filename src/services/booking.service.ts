@@ -58,7 +58,10 @@ export const bookingService = {
   async getMyBookings(userId: string) {
     return bookingRepo.findAll({
       where: { renterId: userId },
-      include: ['equipment', 'owner'],
+      include: [
+        { association: 'equipment', include: [{ association: 'photos', where: { isPrimary: true }, required: false }],},
+        { association: 'owner' },
+      ],
       order: [['createdAt', 'DESC']],
     });
   },
@@ -66,7 +69,10 @@ export const bookingService = {
   async getOwnerBookings(userId: string) {
     return bookingRepo.findAll({
       where: { ownerId: userId },
-      include: ['equipment', 'renter'],
+      include: [
+        { association: 'equipment', include: [{ association: 'photos', where: { isPrimary: true }, required: false }],},
+        { association: 'renter' },
+      ],
       order: [['createdAt', 'DESC']],
     });
   },
