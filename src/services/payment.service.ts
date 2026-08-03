@@ -3,17 +3,22 @@ import { DepositRepository } from '../repositories/deposit.repository';
 import { BookingRepository } from '../repositories/booking.repository';
 import { RefundRepository } from '../repositories/refund.repository';
 import { UserRepository } from '../repositories/user.repository';
+import { EarningRepository } from '../repositories/earning.repository';
+import { TransactionRepository } from '../repositories/transaction.repository';
 import { AppError } from '../utils/AppError';
 import { paystackService } from './paystack.service';
 import { InitializePaymentInput } from '../validators/payment.validator';
 import { PaymentType } from '../models/payment.model';
 import { Booking } from '../models/booking.model';
+import { env } from '../config/env';
 
 const paymentRepository = new PaymentRepository();
 const depositRepository = new DepositRepository();
 const bookingRepository = new BookingRepository();
 const refundRepository = new RefundRepository();
 const userRepository = new UserRepository();
+const earningRepository = new EarningRepository();
+const transactionRepository = new TransactionRepository();
 
 /**
  * Assumption (flag if the Bookings module ends up modeling this
@@ -114,10 +119,12 @@ export const paymentService = {
       paidAt: new Date(),
     } as never);
 
-    // If this payment covered a deposit, open the Deposit record now that funds have cleared.
-    if (payment.type === 'deposit' || payment.type === 'rental_and_deposit') {
-      const booking = await bookingRepository.findById(payment.bookingId);
-      if (booking && Number(booking.depositAmount) > 0) {
+    const booking = await bookingRepository.findById(payment.bookingId);
+
+    // If this payment covered a deposit, open the Deposit record now that
+    // funds have cleared, and log the hold as a Transaction.
+    if (booking && (payment.type === 'deposit' || payment.type === 'rental_and_deposit')) {
+      if (Number(booking.depositAmount) > 0) {
         await depositRepository.create({
           bookingId: payment.bookingId,
           paymentId: payment.id,
@@ -125,14 +132,59 @@ export const paymentService = {
           status: 'held',
           heldAt: new Date(),
         } as never);
+
+        await transactionRepository.create({
+          userId: booking.renterId,
+          type: 'deposit_hold',
+          amount: booking.depositAmount,
+          reference: `${reference}-deposit-hold`,
+          status: 'successful',
+          relatedBookingId: booking.id,
+          relatedPaymentId: payment.id,
+        } as never);
       }
     }
 
-    // TODO (coordinate with Owner Earnings / Bookings owners): once a rental
-    // payment succeeds, an Earning record should be created for the equipment
-    // owner, and the booking may need to move to "in_progress". Neither of
-    // those tables belong to the Payments module — don't build them here,
-    // just flag it in standup so whoever owns Earning/Booking wires the hook.
+    // If this payment covered rent, log the payment itself as a
+    // Transaction and credit the owner's earnings.
+    //
+    // ASSUMPTION (flag if wrong): earnings start "pending" rather than
+    // immediately "available" — they flip to "available" either when the
+    // deposit is released (deposit.service.ts release()) or when a filed
+    // damage claim is rejected (damageClaim.service.ts reject()), both of
+    // which only happen once the booking has genuinely completed cleanly.
+    // EDGE CASE not yet handled: a booking with a $0 deposit and no
+    // damage claim ever filed has no trigger to flip pending->available.
+    // The more robust fix is a hook in Bookings' completeBooking()
+    // (Triumph's file) — flagged as a follow-up, not blocking this.
+    if (booking && (payment.type === 'rental' || payment.type === 'rental_and_deposit')) {
+      const grossAmount = Number(booking.rentalAmount);
+      const platformFee = Math.round(grossAmount * (env.PLATFORM_FEE_PERCENT / 100) * 100) / 100;
+      const netAmount = grossAmount - platformFee;
+
+      await earningRepository.create({
+        ownerId: booking.ownerId,
+        bookingId: booking.id,
+        grossAmount,
+        platformFee,
+        netAmount,
+        status: 'pending',
+      } as never);
+
+      await transactionRepository.create({
+        userId: booking.renterId,
+        type: 'rental_payment',
+        amount: grossAmount,
+        reference: `${reference}-rental`,
+        status: 'successful',
+        relatedBookingId: booking.id,
+        relatedPaymentId: payment.id,
+      } as never);
+    }
+
+    // TODO (coordinate with Bookings owner): the booking may need to move
+    // to "in_progress" once payment clears — that's Triumph's table, not
+    // touched here.
   },
 
   async getById(userId: string, paymentId: string) {

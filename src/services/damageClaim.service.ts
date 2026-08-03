@@ -1,12 +1,16 @@
 import { DamageClaimRepository } from '../repositories/damageClaim.repository';
 import { BookingRepository } from '../repositories/booking.repository';
 import { DepositRepository } from '../repositories/deposit.repository';
+import { EarningRepository } from '../repositories/earning.repository';
+import { TransactionRepository } from '../repositories/transaction.repository';
 import { AppError } from '../utils/AppError';
 import cloudinary from '../config/cloudinary';
 
 const damageClaimRepository = new DamageClaimRepository();
 const bookingRepository = new BookingRepository();
 const depositRepository = new DepositRepository();
+const earningRepository = new EarningRepository();
+const transactionRepository = new TransactionRepository();
 
 async function uploadEvidencePhotos(files: Express.Multer.File[]): Promise<string[]> {
   const uploads = files.map(
@@ -90,8 +94,8 @@ export const damageClaimService = {
    * ASSUMPTION: approving a claim allocates the ENTIRE held deposit to
    * the claim (no partial-split logic yet — flag if the real spec needs
    * "claim $X of a $Y deposit, refund the remainder to the renter").
-   * Creating the actual payout to the owner is an Owner Earnings concern
-   * (Oliver's module) — left as a TODO hook below.
+   * No platform fee applies to a damage payout — the owner is being made
+   * whole for actual damage, not earning rental revenue on it.
    */
   async approve(claimId: string) {
     const claim = await damageClaimRepository.findById(claimId);
@@ -111,9 +115,25 @@ export const damageClaimService = {
     await damageClaimRepository.update(claim.id, { status: 'approved' } as never);
     await depositRepository.update(deposit.id, { status: 'claimed' } as never);
 
-    // TODO (Owner Earnings module): create an Earning record crediting
-    // claim.amountClaimed to the equipment owner. That table/flow belongs
-    // to Oliver's module — coordinate before either of you build it twice.
+    const claimedAmount = Number(claim.amountClaimed);
+
+    await earningRepository.create({
+      ownerId: claim.claimantId,
+      bookingId: claim.bookingId,
+      grossAmount: claimedAmount,
+      platformFee: 0,
+      netAmount: claimedAmount,
+      status: 'available', // the claim decision IS the final determination — no further hold needed
+    } as never);
+
+    await transactionRepository.create({
+      userId: claim.claimantId,
+      type: 'payout',
+      amount: claimedAmount,
+      reference: `damage-claim-${claim.id}-payout`,
+      status: 'pending', // becomes "successful" once an actual payout mechanism exists
+      relatedBookingId: claim.bookingId,
+    } as never);
 
     return damageClaimRepository.findById(claim.id);
   },
@@ -125,9 +145,18 @@ export const damageClaimService = {
       throw AppError.badRequest(`Cannot reject a claim that is already "${claim.status}"`);
     }
 
-    return damageClaimRepository.update(claim.id, {
+    const updated = await damageClaimRepository.update(claim.id, {
       status: 'rejected',
       rejectionReason,
     } as never);
+
+    // No damage confirmed — safe to release the owner's rental earnings
+    // for this booking, same trigger as deposit.service.ts's release().
+    const pendingEarning = await earningRepository.findPendingByBookingId(claim.bookingId);
+    if (pendingEarning) {
+      await earningRepository.update(pendingEarning.id, { status: 'available' } as never);
+    }
+
+    return updated;
   },
 };

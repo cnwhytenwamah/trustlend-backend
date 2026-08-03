@@ -1,6 +1,8 @@
 import { DepositRepository } from '../repositories/deposit.repository';
 import { DamageClaimRepository } from '../repositories/damageClaim.repository';
 import { RefundRepository } from '../repositories/refund.repository';
+import { EarningRepository } from '../repositories/earning.repository';
+import { TransactionRepository } from '../repositories/transaction.repository';
 import { Deposit } from '../models/deposit.model';
 import { Booking } from '../models/booking.model';
 import { AppError } from '../utils/AppError';
@@ -8,6 +10,8 @@ import { AppError } from '../utils/AppError';
 const depositRepository = new DepositRepository();
 const damageClaimRepository = new DamageClaimRepository();
 const refundRepository = new RefundRepository();
+const earningRepository = new EarningRepository();
+const transactionRepository = new TransactionRepository();
 
 type DepositWithBooking = Deposit & { booking?: Booking };
 
@@ -96,6 +100,26 @@ export const depositService = {
       releasedAt: new Date(),
     } as never);
 
+    await transactionRepository.create({
+      userId: booking.renterId,
+      type: 'deposit_release',
+      amount: deposit.amount,
+      reference: `deposit-${deposit.id}-release`,
+      status: 'successful',
+      relatedBookingId: booking.id,
+      relatedPaymentId: deposit.paymentId,
+    } as never);
+
+    // Clean rental, no damage claim — safe to make the owner's earnings
+    // for this booking available. See the assumption noted in
+    // payment.service.ts's handleWebhook about why this is one of the
+    // two triggers for pending -> available (the other being a rejected
+    // damage claim).
+    const pendingEarning = await earningRepository.findPendingByBookingId(booking.id);
+    if (pendingEarning) {
+      await earningRepository.update(pendingEarning.id, { status: 'available' } as never);
+    }
+
     // Actually returning the money runs through the existing Refunds
     // pipeline (an admin approves it at /admin/refunds/:id/process)
     // rather than duplicating a Paystack call here.
@@ -113,7 +137,7 @@ export const depositService = {
    * ASSUMPTION: only usable while the deposit is still "held".
    */
   async refund(depositId: string, reason: string) {
-    const { deposit } = await loadDepositWithBooking(depositId);
+    const { deposit, booking } = await loadDepositWithBooking(depositId);
     if (deposit.status !== 'held') {
       throw AppError.badRequest(`Cannot refund a deposit that is "${deposit.status}"`);
     }
@@ -121,6 +145,16 @@ export const depositService = {
     await depositRepository.update(deposit.id, {
       status: 'refunded',
       refundedAt: new Date(),
+    } as never);
+
+    await transactionRepository.create({
+      userId: booking.renterId,
+      type: 'deposit_refund',
+      amount: deposit.amount,
+      reference: `deposit-${deposit.id}-refund`,
+      status: 'successful',
+      relatedBookingId: booking.id,
+      relatedPaymentId: deposit.paymentId,
     } as never);
 
     return refundRepository.create({

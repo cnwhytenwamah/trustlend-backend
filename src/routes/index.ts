@@ -17,6 +17,7 @@ import transactionRoutes from './v1/transaction.routes';
 import analyticsRoutes from './v1/analytics.routes';
 import notificationRoutes from './v1/notification.routes';
 import messageRoutes from './v1/message.routes';
+import walletRoutes from './v1/wallet.routes';
 
 const router = Router();
 
@@ -44,5 +45,6 @@ router.use('/', transactionRoutes);
 router.use('/', analyticsRoutes);
 router.use('/', notificationRoutes);
 router.use('/', messageRoutes);
+router.use('/', walletRoutes);
 
 export default router;

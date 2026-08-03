@@ -82,8 +82,9 @@ Issue.belongsTo(Booking, { foreignKey: 'bookingId', as: 'booking' });
 User.hasMany(Issue, { foreignKey: 'reporterId', as: 'reportedIssues' });
 Issue.belongsTo(User, { foreignKey: 'reporterId', as: 'reporter' });
 
-// Booking <-> Earning (1:1) / User(owner) <-> Earning (1:many)
-Booking.hasOne(Earning, { foreignKey: 'bookingId', as: 'earning' });
+// Booking <-> Earning (1:many — a booking can produce a rental-payment
+// earning AND a separate damage-claim-payout earning) / User(owner) <-> Earning (1:many)
+Booking.hasMany(Earning, { foreignKey: 'bookingId', as: 'earnings' });
 Earning.belongsTo(Booking, { foreignKey: 'bookingId', as: 'booking' });
 User.hasMany(Earning, { foreignKey: 'ownerId', as: 'earnings' });
 Earning.belongsTo(User, { foreignKey: 'ownerId', as: 'owner' });
