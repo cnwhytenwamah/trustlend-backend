@@ -59,8 +59,11 @@ export const bookingService = {
     return bookingRepo.findAll({
       where: { renterId: userId },
       include: [
-        { association: 'equipment', include: [{ association: 'photos', where: { isPrimary: true }, required: false }],},
-        { association: 'owner' },
+        {
+          association: 'equipment',
+          include: [{ association: 'photos', where: { isPrimary: true }, required: false }],
+        },
+        'owner',
       ],
       order: [['createdAt', 'DESC']],
     });
@@ -70,8 +73,11 @@ export const bookingService = {
     return bookingRepo.findAll({
       where: { ownerId: userId },
       include: [
-        { association: 'equipment', include: [{ association: 'photos', where: { isPrimary: true }, required: false }],},
-        { association: 'renter' },
+        {
+          association: 'equipment',
+          include: [{ association: 'photos', where: { isPrimary: true }, required: false }],
+        },
+        'renter',
       ],
       order: [['createdAt', 'DESC']],
     });

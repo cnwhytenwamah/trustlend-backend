@@ -53,7 +53,13 @@ export const reviewService = {
   async getUserReviews(userId: string) {
     const reviews = await reviewRepo.findAll({
       where: { revieweeId: userId },
-      include: ['reviewer', { association: 'equipment', include: [{ association: 'photos', where: { isPrimary: true }, required: false }] }],
+      include: [
+        'reviewer',
+        {
+          association: 'equipment',
+          include: [{ association: 'photos', where: { isPrimary: true }, required: false }],
+        },
+      ],
       order: [['createdAt', 'DESC']],
     });
     return reviews;

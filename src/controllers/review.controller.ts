@@ -3,7 +3,6 @@ import { reviewService } from '../services/review.service';
 import { sendSuccess } from '../utils/apiResponse';
 
 export const reviewController = {
-  // POST /reviews
   async create(req: Request, res: Response) {
     const result = await reviewService.createReview(req.user!.userId, req.body);
     return sendSuccess(res, {
@@ -12,7 +11,6 @@ export const reviewController = {
     });
   },
 
-  // GET /reviews/equipment/:equipmentId
   async getEquipmentReviews(req: Request, res: Response) {
     const equipmentId = req.params.equipmentId as string;
     const result = await reviewService.getEquipmentReviews(equipmentId);
@@ -22,7 +20,6 @@ export const reviewController = {
     });
   },
 
-  // GET /reviews/user/:userId
   async getUserReviews(req: Request, res: Response) {
     const userId = req.params.userId as string;
     const result = await reviewService.getUserReviews(userId);
@@ -32,7 +29,6 @@ export const reviewController = {
     });
   },
 
-  // PATCH /reviews/:id
   async update(req: Request, res: Response) {
     const reviewId = req.params.id as string;
     const result = await reviewService.updateReview(reviewId, req.user!.userId, req.body);
@@ -42,7 +38,6 @@ export const reviewController = {
     });
   },
 
-  // DELETE /reviews/:id
   async delete(req: Request, res: Response) {
     const reviewId = req.params.id as string;
     const result = await reviewService.deleteReview(reviewId, req.user!.userId);
