@@ -45,51 +45,41 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
     });
   }
 
-  // async findByOwnerId(ownerId: string) {
-  //   return this.model.findAll({
-  //     where: {
-  //       ownerId,
-  //     },
-  //     order: [["createdAt", "DESC"]],
-  //   });
-  // }
-
   async findByOwnerId(ownerId: string) {
-  return this.model.findAll({
-    where: {
-      ownerId,
-    },
+    return this.model.findAll({
+      where: {
+        ownerId,
+      },
 
-    include: [
-      {
-        association: "photos",
-        attributes: [
-          "id",
-          "url",
-          "isPrimary",
-          "sortOrder",
-        ],
-        where: {
-          isPrimary: true,
+      include: [
+        {
+          association: "photos",
+          attributes: [
+            "id",
+            "url",
+            "isPrimary",
+            "sortOrder",
+          ],
+          where: {
+            isPrimary: true,
+          },
+          required: false,
         },
-        required: false,
-      },
-      {
-        association: "owner",
-        attributes: [
-          "id",
-          "firstName",
-          "lastName",
-          "profilePhotoUrl",
-          "isIdentityVerified",
-        ],
-      },
-    ],
+        {
+          association: "owner",
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "profilePhotoUrl",
+            "isIdentityVerified",
+          ],
+        },
+      ],
 
-    order: [["createdAt", "DESC"]],
-  });
-}
-
+      order: [["createdAt", "DESC"]],
+    });
+  }
 
 async findAllEquipment() {
   return this.model.findAll({
@@ -99,7 +89,7 @@ async findAllEquipment() {
 
 async approveEquipment(id: string) {
   return this.update(id,{
-    status: "approved",
+    status: "active",
   } as never);
 }
 
