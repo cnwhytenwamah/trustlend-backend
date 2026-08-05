@@ -17,7 +17,8 @@
     "declaration": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
