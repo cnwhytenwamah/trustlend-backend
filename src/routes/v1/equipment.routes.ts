@@ -100,11 +100,11 @@ router.post(
   asyncHandler(availabilityController.blockDates)
 );
 
-router.delete(
-  "/equipment/:id/block-dates/:blockId",
-  requireAuth,
-  asyncHandler(availabilityController.unblockDates)
-);
+// router.delete(
+//   "/equipment/:id/block-dates/:blockId",
+//   requireAuth,
+//   asyncHandler(availabilityController.unblockDates)
+// );
 
 // --------------------
 // Admin Moderation
