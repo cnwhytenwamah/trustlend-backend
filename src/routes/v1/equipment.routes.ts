@@ -9,6 +9,7 @@ import {
   createEquipmentSchema,
   updateEquipmentSchema,
 } from "../../validators/equipment.validator";
+import { availabilityController } from "../../controllers/availability.controller";
 
 const router = Router();
 
@@ -84,25 +85,25 @@ router.patch(
 
 router.get(
   "/equipment/:id/availability",
-  asyncHandler(notImplemented("equipment.getAvailability"))
+  asyncHandler(availabilityController.getAvailability)
 );
 
 router.patch(
   "/equipment/:id/availability",
   requireAuth,
-  asyncHandler(notImplemented("equipment.updateAvailability"))
+  asyncHandler(availabilityController.updateAvailability)
 );
 
 router.post(
   "/equipment/:id/block-dates",
   requireAuth,
-  asyncHandler(notImplemented("equipment.blockDates"))
+  asyncHandler(availabilityController.blockDates)
 );
 
 router.delete(
   "/equipment/:id/block-dates/:blockId",
   requireAuth,
-  asyncHandler(notImplemented("equipment.unblockDates"))
+  asyncHandler(availabilityController.unblockDates)
 );
 
 // --------------------

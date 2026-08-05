@@ -3,12 +3,7 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { requireAuth } from "../../middlewares/auth.middleware";
 import { validate } from "../../middlewares/validate.middleware";
 import { availabilityController } from "../../controllers/availability.controller";
-import {
-  availabilityParamSchema,
-  updateAvailabilitySchema,
-  blockDatesSchema,
-  blockIdParamSchema,
-} from "../../validators/availability.validator";
+import { availabilityParamSchema, updateAvailabilitySchema, blockDatesSchema, blockIdParamSchema,} from "../../validators/availability.validator";
 
 const router = Router();
 
