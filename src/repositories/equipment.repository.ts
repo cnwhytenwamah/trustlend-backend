@@ -34,6 +34,7 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
             "firstName",
             "lastName",
             "profilePhotoUrl",
+            "isIdentityVerified",
           ],
         },
       ],
@@ -49,10 +50,58 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
       where: {
         ownerId,
       },
+
+      include: [
+        {
+          association: "photos",
+          attributes: [
+            "id",
+            "url",
+            "isPrimary",
+            "sortOrder",
+          ],
+          where: {
+            isPrimary: true,
+          },
+          required: false,
+        },
+        {
+          association: "owner",
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "profilePhotoUrl",
+            "isIdentityVerified",
+          ],
+        },
+      ],
+
       order: [["createdAt", "DESC"]],
     });
   }
 
+async findAllEquipment() {
+  return this.model.findAll({
+    order: [["createdAt", "DESC"]],
+  });
+}
+
+async approveEquipment(id: string) {
+  return this.update(id,{
+    status: "active",
+  } as never);
+}
+
+async rejectEquipment(id: string) {
+  return this.update(id,{
+    status: "rejected",
+  } as never);
+}
+
+async adminDeleteEquipment(id: string) {
+  return this.delete(id);
+}
   async findById(id: string) {
     return this.model.findByPk(id, {
       include: [
@@ -76,6 +125,7 @@ export class EquipmentRepository extends BaseRepository<Equipment> {
             "firstName",
             "lastName",
             "profilePhotoUrl",
+            "isIdentityVerified",
           ],
         },
       ],

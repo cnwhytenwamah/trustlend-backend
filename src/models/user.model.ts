@@ -20,6 +20,13 @@ export interface UserAttributes {
   status: UserStatus;
   isEmailVerified: boolean;
   emailVerifiedAt: Date | null;
+  // Denormalized identity-verification status, distinct from isEmailVerified.
+  // Set by: (a) an admin override via PATCH /admin/users/:id/verify, or
+  // (b) eventually, James's Identity Verification module approving a
+  // submitted Verification record — that hook isn't wired up yet, see
+  // the TODO in adminUser.service.ts.
+  isIdentityVerified: boolean;
+  identityVerifiedAt: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -32,6 +39,8 @@ type UserCreationAttributes = Optional<
   | 'status'
   | 'isEmailVerified'
   | 'emailVerifiedAt'
+  | 'isIdentityVerified'
+  | 'identityVerifiedAt'
   | 'createdAt'
   | 'updatedAt'
 >;
@@ -48,6 +57,8 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   public status!: UserStatus;
   public isEmailVerified!: boolean;
   public emailVerifiedAt!: Date | null;
+  public isIdentityVerified!: boolean;
+  public identityVerifiedAt!: Date | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -77,6 +88,8 @@ User.init(
     },
     isEmailVerified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     emailVerifiedAt: { type: DataTypes.DATE, allowNull: true },
+    isIdentityVerified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    identityVerifiedAt: { type: DataTypes.DATE, allowNull: true },
   },
   {
     sequelize,

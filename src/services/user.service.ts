@@ -16,11 +16,14 @@ export const userService = {
     const user = await userRepository.findById(id);
     if (!user) throw AppError.notFound('User not found');
     // Public profile only — trim down to what other users should see.
+    // isIdentityVerified is safe to expose (it's just a badge signal);
+    // the underlying Verification documents/selfie stay admin-only.
     return {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       profilePhotoUrl: user.profilePhotoUrl,
+      isIdentityVerified: user.isIdentityVerified,
       createdAt: user.createdAt,
     };
   },

@@ -43,6 +43,22 @@ export const equipmentService = {
     return equipmentRepository.findByOwnerId(ownerId);
   },
 
+async getAllEquipment() {
+  return equipmentRepository.findAllEquipment();
+},
+
+async approveEquipment(id: string) {
+  return equipmentRepository.approveEquipment(id);
+},
+
+async rejectEquipment(id: string) {
+  return equipmentRepository.rejectEquipment(id);
+},
+
+async adminDeleteEquipment(id: string) {
+  return equipmentRepository.adminDeleteEquipment(id)
+},
+
   async getById(id: string) {
     if (!uuidRegex.test(id)) {
       throw AppError.badRequest("Invalid equipment ID");
