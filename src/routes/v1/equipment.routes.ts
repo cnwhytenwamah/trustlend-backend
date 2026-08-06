@@ -4,12 +4,10 @@ import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
 import { upload } from "../../middlewares/upload.middleware";
 import { equipmentController } from "../../controllers/equipment.controller";
 import { validate } from "../../middlewares/validate.middleware";
-import { notImplemented } from "../../controllers/_stub";
 import {
   createEquipmentSchema,
   updateEquipmentSchema,
 } from "../../validators/equipment.validator";
-import { availabilityController } from "../../controllers/availability.controller";
 
 const router = Router();
 
@@ -78,33 +76,6 @@ router.patch(
   asyncHandler(equipmentController.setPrimaryPhoto),
 );
 
-
-// --------------------
-// Availability
-// --------------------
-
-router.get(
-  "/equipment/:id/availability",
-  asyncHandler(availabilityController.getAvailability)
-);
-
-router.patch(
-  "/equipment/:id/availability",
-  requireAuth,
-  asyncHandler(availabilityController.updateAvailability)
-);
-
-router.post(
-  "/equipment/:id/block-dates",
-  requireAuth,
-  asyncHandler(availabilityController.blockDates)
-);
-
-router.delete(
-  "/equipment/:id/block-dates/:blockId",
-  requireAuth,
-  asyncHandler(availabilityController.deleteBlock)
-);
 
 // --------------------
 // Admin Moderation
